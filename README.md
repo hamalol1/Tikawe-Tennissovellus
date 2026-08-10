@@ -7,5 +7,8 @@ Tietokannat ja Web ohjelmointi course github repository
 - Käyttäjä näkee sovellukseen lisätyt ilmoitukset.
 - Käyttäjä pystyy etsimään ilmoituksia sen perusteella, milloin vuoro on.
 - Käyttäjäsivu näyttää, montako ilmoitusta käyttäjä on lähettänyt ja listan ilmoituksista.
+- Käyttäjä pystyy valitsemaan esimerkiksi seuraavia luokitteluja:
+    Pelipaikka: Kumpula Unisport tai Otaniemi Unisport
+    Pelaajan taso: aloittelija, keskitaso tai edistynyt
 - Käyttäjä pystyy valitsemaan ilmoitukselle yhden tai useamman luokittelun (esim. talin tenniskeskus, keskitason pelaaja).
 - Käyttäjä pystyy ilmoittautumaan pelivuoroon. Ilmoituksessa näytetään, ketkä käyttäjät ovat ilmoittautuneet.
