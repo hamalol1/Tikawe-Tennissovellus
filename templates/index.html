@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <title>Etusivu</title>
+  <title>Keskustelu</title>
 </head>
-
 <body>
-  <h1>Etusivu</h1>
-  <p>{{ message }}</p>
-  <ul>
-    {% for item in items %}
-    <li>{{ item }}</li>
-    {% endfor %}
-  </ul>
+  <p>Sivua on ladattu {{ visit_count }} kertaa.</p>
+  <p>Viestien määrä: {{ count }}</p>
+  <hr />
+  {% for message in messages %}
+  <p>
+    {{ message.content }}
+  </p>
+  <hr />
+  {% endfor %}
+  
+  <p>
+    <a href="/new">Lähetä viesti</a>
+  </p>
 </body>
-
 </html>
