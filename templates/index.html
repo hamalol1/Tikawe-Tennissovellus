@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Keskustelu</title>
+  <title>Etusivu</title>
 </head>
 <body>
+  {% if session.username %}
+  <p>
+    Olet kirjautunut nimellä {{ session.username }}
+  </p>
+  <p>
+    <a href="/logout">Kirjaudu ulos</a>
+  </p>
+  {% else %}
+  <form action="/login" method="post">
+    <p>
+      Tunnus: <br />
+      <input type="text" name="username" />
+    </p>
+    <p>
+      Salasana: <br />
+      <input type="password" name="password" />
+    </p>
+    <input type="submit" value="Kirjaudu" />
+  </form>
+  <p>
+    <a href="/register">Luo tunnus</a>
+  </p>
+  {% endif %}
+
+  <hr />
+  
   <p>Sivua on ladattu {{ visit_count }} kertaa.</p>
   <p>Viestien määrä: {{ count }}</p>
-  <hr />
+  
   {% for message in messages %}
   <p>
     {{ message.content }}
