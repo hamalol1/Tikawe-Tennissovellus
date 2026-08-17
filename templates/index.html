@@ -6,42 +6,38 @@
 <body>
   {% if session.username %}
   <p>
-    Olet kirjautunut nimellä {{ session.username }}
+    Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a>
   </p>
-  <p>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
+  
+  <h2>Uusi ketju</h2>
+  <form action="/new_thread" method="post">
+    <p>
+      Otsikko: <br />
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Viesti: <br />
+      <textarea name="content" rows="5" cols="40"></textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
   {% else %}
   <form action="/login" method="post">
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Salasana: <br />
-      <input type="password" name="password" />
-    </p>
+    <p>Tunnus: <br /><input type="text" name="username" /></p>
+    <p>Salasana: <br /><input type="password" name="password" /></p>
     <input type="submit" value="Kirjaudu" />
   </form>
-  <p>
-    <a href="/register">Luo tunnus</a>
-  </p>
+  <p><a href="/register">Luo tunnus</a></p>
   {% endif %}
 
   <hr />
-  
-  <p>Sivua on ladattu {{ visit_count }} kertaa.</p>
-  <p>Viestien määrä: {{ count }}</p>
-  
-  {% for message in messages %}
+  <h2>Keskustelut</h2>
+  {% for thread in threads %}
   <p>
-    {{ message.content }}
+    <a href="/thread/{{ thread.id }}">{{ thread.title }}</a><br />
+    {{ thread.total }} viestiä, uusin {{ thread.last }}
   </p>
   <hr />
   {% endfor %}
-  
-  <p>
-    <a href="/new">Lähetä viesti</a>
-  </p>
 </body>
 </html>

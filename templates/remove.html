@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Poista viesti</title>
+</head>
+<body>
+  <h2>Viestin poisto</h2>
+  <form action="/remove/{{ message.id }}" method="post">
+    <p>
+      Haluatko varmasti poistaa viestin?
+    </p>
+    <input type="submit" name="continue" value="Jatka" />
+    <input type="submit" name="cancel" value="Peruuta" />
+  </form>
+</body>
+</html>
