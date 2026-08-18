@@ -8,9 +8,9 @@
   <p><a href="/">Palaa etusivulle</a></p>
   <hr />
 
-  {% for message in messages %}
-  <p>
-    {{ message.username }} ({{ message.sent_at }}):
+{% for message in messages %}
+  <p id="{{ message.id }}">
+    <a href="/user/{{ message.user_id }}">{{ message.username }}</a> ({{ message.sent_at }}):
   </p>
   <p>
     {{ message.content }}

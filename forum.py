@@ -44,3 +44,12 @@ def update_message(message_id, content):
 def remove_message(message_id):
     sql = "UPDATE messages SET status = 0 WHERE id = ?"
     db.execute(sql, [message_id])
+
+def search(query):
+    sql = """SELECT m.id message_id, m.thread_id, t.title thread_title,
+                    m.sent_at, u.username
+             FROM threads t, messages m, users u
+             WHERE t.id = m.thread_id AND u.id = m.user_id AND m.status = 1 AND
+                   m.content LIKE ?
+             ORDER BY m.sent_at DESC"""
+    return db.query(sql, ["%" + query + "%"])
