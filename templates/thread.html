@@ -26,10 +26,10 @@
 
   {% if session.user_id %}
   <h2>Uusi viesti</h2>
-  <form action="/new_message" method="post">
+<form action="/new_message" method="post">
     <p>
       Viesti:<br />
-      <textarea name="content" rows="5" cols="40"></textarea>
+      <textarea name="content" rows="5" cols="40" maxlength="5000" required></textarea>
     </p>
     <input type="hidden" name="thread_id" value="{{ thread.id }}" />
     <input type="submit" value="Lähetä" />

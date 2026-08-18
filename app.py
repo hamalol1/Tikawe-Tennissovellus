@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import db
@@ -7,6 +7,10 @@ import forum
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -63,8 +67,14 @@ def logout():
 
 @app.route("/new_thread", methods=["POST"])
 def new_thread():
+    require_login()
+    
     title = request.form["title"]
     content = request.form["content"]
+    
+    if not title or len(title) > 100 or len(content) > 5000:
+        abort(403)
+        
     user_id = session["user_id"]
 
     thread_id = forum.add_thread(title, content, user_id)
@@ -73,33 +83,62 @@ def new_thread():
 @app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):
     thread = forum.get_thread(thread_id)
+
+    if not thread:
+        abort(404)
+        
     messages = forum.get_messages(thread_id)
     return render_template("thread.html", thread=thread, messages=messages)
 
 @app.route("/new_message", methods=["POST"])
 def new_message():
+    require_login()
+    
     content = request.form["content"]
     user_id = session["user_id"]
     thread_id = request.form["thread_id"]
+    
+    if not content or len(content) > 5000:
+        abort(403)
 
-    forum.add_message(content, user_id, thread_id)
+    try:
+        forum.add_message(content, user_id, thread_id)
+    except sqlite3.IntegrityError:
+        abort(403)
+        
     return redirect("/thread/" + str(thread_id))
 
 @app.route("/edit/<int:message_id>", methods=["GET", "POST"])
 def edit_message(message_id):
+    require_login()
     message = forum.get_message(message_id)
+    
+    if not message:
+        abort(404)
+        
+    if message["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("edit.html", message=message)
 
     if request.method == "POST":
         content = request.form["content"]
+        if not content or len(content) > 5000:
+            abort(403)
         forum.update_message(message["id"], content)
         return redirect("/thread/" + str(message["thread_id"]))
 
 @app.route("/remove/<int:message_id>", methods=["GET", "POST"])
 def remove_message(message_id):
+    require_login()
     message = forum.get_message(message_id)
+    
+    if not message:
+        abort(404)
+        
+    if message["user_id"] != session["user_id"]:
+        abort(403)
 
     if request.method == "GET":
         return render_template("remove.html", message=message)
