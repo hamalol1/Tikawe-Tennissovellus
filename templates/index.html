@@ -30,8 +30,16 @@
   <p><a href="/register">Luo tunnus</a></p>
   {% endif %}
 
-  <hr />
+<hr />
   <h2>Keskustelut</h2>
+  
+  <p>
+    <a href="/{{ page - 1 }}">&lt;&lt;</a>
+    Sivu {{ page }}/{{ page_count }}
+    <a href="/{{ page + 1 }}">&gt;&gt;</a>
+  </p>
+  <hr />
+
   {% for thread in threads %}
   <p>
     <a href="/thread/{{ thread.id }}">{{ thread.title }}</a><br />

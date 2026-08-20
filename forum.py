@@ -1,12 +1,20 @@
 import db
 
-def get_threads():
+def thread_count():
+    sql = "SELECT COUNT(*) FROM threads"
+    result = db.query(sql)
+    return result[0][0] if result else 0
+
+def get_threads(page, page_size):
     sql = """SELECT t.id, t.title, COUNT(m.id) total, MAX(m.sent_at) last
              FROM threads t, messages m
              WHERE t.id = m.thread_id AND m.status = 1
              GROUP BY t.id
-             ORDER BY t.id DESC"""
-    return db.query(sql)
+             ORDER BY t.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
 
 def add_thread(title, content, user_id):
     sql = "INSERT INTO threads (title, user_id) VALUES (?, ?)"
