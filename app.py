@@ -2,7 +2,8 @@ import sqlite3
 import time
 import math
 import secrets 
-from flask import Flask, redirect, render_template, request, session, abort, make_response, g
+import markupsafe
+from flask import Flask, redirect, render_template, request, session, abort, make_response, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import db
@@ -11,6 +12,12 @@ import users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 @app.before_request
 def before_request():
@@ -46,49 +53,57 @@ def index(page=1):
     threads = forum.get_threads(page, page_size)
     return render_template("index.html", page=page, page_count=page_count, threads=threads)
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html", filled={})
 
-@app.route("/create", methods=["POST"])
-def create():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-    if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
+    if request.method == "POST":
+        username = request.form["username"]
+        if len(username) > 16:
+            abort(403)
+            
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
 
-    try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-    except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
+        if password1 != password2:
+            flash("VIRHE: Antamasi salasanat eivät ole samat")
+            return render_template("register.html", filled={"username": username})
 
-    return "Tunnus luotu"
+        password_hash = generate_password_hash(password1)
 
-@app.route("/login", methods=["POST"])
+        try:
+            sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+            db.execute(sql, [username, password_hash])
+            flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
+            return redirect("/")
+        except sqlite3.IntegrityError:
+            flash("VIRHE: Valitsemasi tunnus on jo varattu")
+            return render_template("register.html", filled={"username": username})
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
-    
-    sql = "SELECT id, password_hash FROM users WHERE username = ?"
-    result = db.query(sql, [username])
-    
-    if not result:
-        return "VIRHE: väärä tunnus tai salasana"
+    if request.method == "GET":
+        return render_template("login.html", next_page=request.referrer)
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        next_page = request.form["next_page"]
         
-    user_id = result[0]["id"]
-    password_hash = result[0]["password_hash"]
+        sql = "SELECT id, password_hash FROM users WHERE username = ?"
+        result = db.query(sql, [username])
+        
+        if result and check_password_hash(result[0]["password_hash"], password):
+            session["username"] = username
+            session["user_id"] = result[0]["id"]
+            session["csrf_token"] = secrets.token_hex(16)
+            
+            return redirect(next_page if next_page else "/")
+        else:
+            flash("VIRHE: Väärä tunnus tai salasana")
+            return render_template("login.html", next_page=next_page)
 
-    if check_password_hash(password_hash, password):
-        session["username"] = username
-        session["user_id"] = user_id
-
-        session["csrf_token"] = secrets.token_hex(16)
-        return redirect("/")
-    else:
-        return "VIRHE: väärä tunnus tai salasana"
 
 @app.route("/logout")
 def logout():
@@ -211,14 +226,17 @@ def add_image():
         check_csrf() 
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
-            return "VIRHE: väärä tiedostomuoto"
+            flash("VIRHE: Lähettämäsi tiedosto ei ole jpg-tiedosto")
+            return redirect("/add_image")
 
         image = file.read()
         if len(image) > 100 * 1024:
-            return "VIRHE: liian suuri kuva"
+            flash("VIRHE: Lähettämäsi tiedosto on liian suuri")
+            return redirect("/add_image")
 
         user_id = session["user_id"]
         users.update_image(user_id, image)
+        flash("Kuvan lisääminen onnistui")
         return redirect("/user/" + str(user_id))
 
 @app.route("/image/<int:user_id>")
