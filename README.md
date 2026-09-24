@@ -1,5 +1,6 @@
 # tikawe
-Tietokannat ja Web ohjelmointi course github repository
+Tietokannat ja Web ohjelmointi course github repository.
+- HUOM. en ole vielä tehnyt tässä luettavia tennissovellusominaisuuksia, vaan olen tehnyt kurssin esimerkkisovellusta. Muokaan sen sitten vastaamaan tätä tennissovellustani. 
 
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
 - Käyttäjä pystyy lisäämään profiilikuvan.
@@ -17,10 +18,10 @@ Tietokannat ja Web ohjelmointi course github repository
 ## Sovelluksen testaaminen paikallisesti
 
 1. Kloonaa repositorio omalle koneellesi ja siirry projektikansioon.
-2. Luo salainen avain: Luo projektin juureen tiedosto `config.py` ja lisää sinne seuraava koodirivi istuntojen ja CSRF-suojauksen mahdollistamiseksi:
-   `secret_key = "oma_salainen_avaimesi"`
+2. Asenna Flask: Varmista, että koneellasi on Python asennettuna. Asenna Flask suorittamalla komentoikkunassa komento:
+   `pip install Flask`
 3. Alusta tietokanta: Luo paikallinen tietokantatiedosto ja sen taulut `schema.sql` -tiedoston avulla suorittamalla komentoikkunassa:
    `sqlite3 database.db < schema.sql`
-4. Käynnistä sovellus: Varmista, että sinulla on asennettuna Flask. Käynnistä palvelin komennolla:
+4. äynnistä sovellus: Käynnistä paikallinen palvelin komennolla:
    `flask run`
 5. Testaa: Avaa verkkoselain ja siirry osoitteeseen `http://127.0.0.1:5000`.
