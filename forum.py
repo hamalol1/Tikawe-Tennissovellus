@@ -6,7 +6,7 @@ def thread_count():
     return result[0][0] if result else 0
 
 def get_threads(page, page_size):
-    sql = """SELECT t.id, t.title, COUNT(m.id) total, MAX(m.sent_at) last
+    sql = """SELECT t.id, t.peliaika, t.pelipaikka, t.pelitaso, t.pelaajien_maara, t.kesto, COUNT(m.id) total, MAX(m.sent_at) last
              FROM threads t, messages m
              WHERE t.id = m.thread_id AND m.status = 1
              GROUP BY t.id
@@ -16,20 +16,23 @@ def get_threads(page, page_size):
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
 
-def add_thread(title, content, user_id):
-    sql = "INSERT INTO threads (title, user_id) VALUES (?, ?)"
-    db.execute(sql, [title, user_id])
+def add_thread(peliaika, pelipaikka, pelitaso, pelaajien_maara, kesto, content, user_id):
+    sql = """INSERT INTO threads (peliaika, pelipaikka, pelitaso, pelaajien_maara, kesto, user_id) 
+             VALUES (?, ?, ?, ?, ?, ?)"""
+    db.execute(sql, [peliaika, pelipaikka, pelitaso, pelaajien_maara, kesto, user_id])
     thread_id = db.last_insert_id()
     add_message(content, user_id, thread_id)
     return thread_id
-    
+
 def add_message(content, user_id, thread_id):
     sql = """INSERT INTO messages (content, sent_at, user_id, thread_id, status)
              VALUES (?, datetime('now'), ?, ?, 1)"""
     db.execute(sql, [content, user_id, thread_id])
 
 def get_thread(thread_id):
-    sql = "SELECT id, title FROM threads WHERE id = ?"
+    sql = """SELECT t.id, t.peliaika, t.pelipaikka, t.pelitaso, t.pelaajien_maara, t.kesto, t.user_id, u.username as creator
+             FROM threads t, users u 
+             WHERE t.user_id = u.id AND t.id = ?"""
     result = db.query(sql, [thread_id])
     return result[0] if result else None
 
@@ -54,10 +57,26 @@ def remove_message(message_id):
     db.execute(sql, [message_id])
 
 def search(query):
-    sql = """SELECT m.id message_id, m.thread_id, t.title thread_title,
+    sql = """SELECT m.id message_id, m.thread_id, 
+                    t.pelipaikka || ' (' || t.peliaika || ')' as thread_title,
                     m.sent_at, u.username
              FROM threads t, messages m, users u
              WHERE t.id = m.thread_id AND u.id = m.user_id AND m.status = 1 AND
-                   m.content LIKE ?
+                   (m.content LIKE ? OR t.pelipaikka LIKE ? OR t.peliaika LIKE ?)
              ORDER BY m.sent_at DESC"""
-    return db.query(sql, ["%" + query + "%"])
+    search_term = "%" + query + "%"
+    return db.query(sql, [search_term, search_term, search_term])
+
+def get_participants(thread_id):
+    sql = """SELECT u.id, u.username 
+             FROM users u, participants p 
+             WHERE u.id = p.user_id AND p.thread_id = ?"""
+    return db.query(sql, [thread_id])
+
+def add_participant(user_id, thread_id):
+    sql = "INSERT INTO participants (user_id, thread_id) VALUES (?, ?)"
+    db.execute(sql, [user_id, thread_id])
+
+def remove_participant(user_id, thread_id):
+    sql = "DELETE FROM participants WHERE user_id = ? AND thread_id = ?"
+    db.execute(sql, [user_id, thread_id])

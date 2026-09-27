@@ -100,7 +100,7 @@ nav a:hover {
 }
 
 
-input[type="text"], input[type="password"], textarea, input[type="file"] {
+input[type="text"], input[type="password"], textarea, input[type="file"], select {
   width: 100%;
   padding: 0.8em;
   margin-top: 0.3em;

@@ -8,7 +8,9 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_messages(user_id):
-    sql = """SELECT m.id, m.thread_id, t.title thread_title, m.sent_at
+    sql = """SELECT m.id, m.thread_id, 
+                    t.pelipaikka || ' (' || t.peliaika || ')' as thread_title, 
+                    m.sent_at
              FROM threads t, messages m
              WHERE t.id = m.thread_id AND m.user_id = ? AND m.status = 1
              ORDER BY m.sent_at DESC"""

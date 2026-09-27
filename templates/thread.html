@@ -1,10 +1,44 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ thread.title }}{% endblock %}
+{% block title %}{{ thread.pelipaikka }} - Tikawe Tennis{% endblock %}
 
 {% block content %}
-  <h2>{{ thread.title }}</h2>
-  <hr />
+  <h2>{{ thread.pelipaikka }} ({{ thread.peliaika }})</h2>
+  
+  <div style="background-color: #e8f5e9; padding: 1.5em; border-radius: 4px; border: 1px solid #a5d6a7; margin-bottom: 2em;">
+    <p style="margin: 0 0 0.5em 0;"><strong>Ilmoittaja:</strong> <a href="/user/{{ thread.user_id }}" style="color: #1b5e20;">{{ thread.creator }}</a></p>
+    <p style="margin: 0 0 0.5em 0;"><strong>Pelitaso:</strong> {{ thread.pelitaso }}</p>
+    <p style="margin: 0 0 0.5em 0;"><strong>Kesto:</strong> {{ thread.kesto }} h</p>
+    <p style="margin: 0 0 0.5em 0;"><strong>Vapaita paikkoja:</strong> {{ thread.pelaajien_maara - participants|length }} / {{ thread.pelaajien_maara }}</p>
+    <p style="margin: 0 0 1em 0;">
+      <strong>Mukaan ilmoittautuneet:</strong> 
+      {% if participants %}
+        {% for p in participants %}<a href="/user/{{ p.id }}">{{ p.username }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+      {% else %}
+        <i>Ei vielä osallistujia</i>
+      {% endif %}
+    </p>
+    
+    <!-- Painikelogiikka -->
+    {% if is_participant %}
+      <form action="/leave" method="post" style="display:inline;">
+        <input type="hidden" name="thread_id" value="{{ thread.id }}">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Peru ilmoittautuminen" style="background-color: #c62828;">
+      </form>
+    {% elif participants|length < thread.pelaajien_maara and session.user_id != thread.user_id %}
+      <form action="/join" method="post" style="display:inline;">
+        <input type="hidden" name="thread_id" value="{{ thread.id }}">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Ilmoittaudu mukaan">
+      </form>
+    {% elif participants|length >= thread.pelaajien_maara %}
+      <p style="color: #c62828; font-weight: bold; margin: 0;">Vuoro on täynnä.</p>
+    {% endif %}
+  </div>
+  
+  <h3>Lisätiedot ja keskustelu</h3>
+  <hr style="margin-bottom: 1em;" />
 
   {% for message in messages %}
   <div class="thread" id="{{ message.id }}">
@@ -16,7 +50,7 @@
     </p>
     {% if message.user_id == session.user_id %}
     <p style="margin-top: 1em; font-size: 0.9em;">
-      <a href="/edit/{{ message.id }}" style="color: #2e7d32;">Muokkaa</a> |
+      <a href="/edit/{{ message.id }}" style="color: #2e7d32; font-weight: bold;">Muokkaa tekstiä</a> |
       <a href="/remove/{{ message.id }}" style="color: #c62828;">Poista</a>
     </p>
     {% endif %}
@@ -24,15 +58,14 @@
   {% endfor %}
 
   {% if session.user_id %}
-  <h3 style="margin-top: 2em;">Vastaa ilmoitukseen</h3>
+  <h3 style="margin-top: 2em;">Kysy lisätietoja</h3>
   <form action="/new_message" method="post">
     <p>
-      <label for="content">Viesti</label>:<br />
-      <textarea id="content" name="content" rows="4" maxlength="5000" required></textarea>
+      <textarea id="content" name="content" rows="4" maxlength="5000" placeholder="Kirjoita viesti tähän..." required></textarea>
     </p>
     <input type="hidden" name="thread_id" value="{{ thread.id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä vastaus" />
+    <input type="submit" value="Lähetä viesti" />
   </form>
   {% endif %}
 {% endblock %}

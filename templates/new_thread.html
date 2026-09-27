@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Luo pelivuoro{% endblock %}
+
+{% block content %}
+  <h2>Ilmoita uusi pelivuoro</h2>
+  <form action="/new_thread" method="post">
+    <p>
+      <label for="peliaika">Peliaika</label>: <br />
+      <input type="text" id="peliaika" name="peliaika" placeholder="esim. Ma 12.10. klo 18:00" maxlength="100" required />
+    </p>
+    <p>
+      <label for="pelipaikka">Pelipaikka</label>: <br />
+      <select id="pelipaikka" name="pelipaikka" required>
+        <option value="Kimpisen massatenniskentät">Kimpisen massatenniskentät</option>
+        <option value="Huhtiniemen sisähalli">Huhtiniemen sisähalli</option>
+      </select>
+    </p>
+    <p>
+      <label for="pelitaso">Pelaajan taso</label>: <br />
+      <select id="pelitaso" name="pelitaso" required>
+        <option value="Aloittelija">Aloittelija</option>
+        <option value="Keskitaso">Keskitaso</option>
+        <option value="Kilpa">Kilpa</option>
+      </select>
+    </p>
+    <p>
+      <label for="pelaajien_maara">Tarvittavien pelaajien määrä</label>: <br />
+      <input type="number" id="pelaajien_maara" name="pelaajien_maara" min="1" max="4" value="1" required />
+    </p>
+    <p>
+      <label for="kesto">Vuoron kesto (tunteina)</label>: <br />
+      <input type="number" id="kesto" name="kesto" min="1" max="10" value="1" required />
+    </p>
+    <p>
+      <label for="content">Lisätiedot</label>: <br />
+      <textarea id="content" name="content" rows="4" maxlength="5000" placeholder="Esim. Kenttämaksu puolitetaan..."></textarea>
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Julkaise ilmoitus" />
+  </form>
+{% endblock %}

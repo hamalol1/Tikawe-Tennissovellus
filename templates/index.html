@@ -5,25 +5,10 @@
 {% block content %}
   {% if session.username %}
   <p>Olet kirjautunut nimellä <strong>{{ session.username }}</strong></p>
-  
-  <h2>Uusi peliseura-ilmoitus</h2>
-  <form action="/new_thread" method="post">
-    <p>
-      <label for="title">Otsikko (Paikka, aika, taso)</label>: <br />
-      <input type="text" id="title" name="title" maxlength="100" required />
-    </p>
-    <p>
-      <label for="content">Tarkemmat tiedot</label>: <br />
-      <textarea id="content" name="content" rows="5" maxlength="5000" required></textarea>
-    </p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Julkaise ilmoitus" />
-  </form>
   {% else %}
-  <p><a href="/login">Kirjaudu sisään tai luo tunnus</a> etsiäksesi peliseuraa.</p>
+  <p><a href="/login">Kirjaudu sisään tai luo tunnus</a> ilmoittaaksesi omista pelivuoroistasi.</p>
   {% endif %}
 
-  <hr />
   <h2>Avoimet pelivuorot</h2>
   
   <p>
@@ -35,11 +20,18 @@
   {% for thread in threads %}
   <div class="thread">
     <p>
-      <a href="/thread/{{ thread.id }}" style="font-size: 1.2em; font-weight: bold; color: #1b5e20;">{{ thread.title }}</a>
+      <a href="/thread/{{ thread.id }}" style="font-size: 1.2em; font-weight: bold; color: #1b5e20;">
+        {{ thread.pelipaikka }} ({{ thread.peliaika }})
+      </a>
     </p>
-    <p style="color: #555;">
+    <p style="color: #333;">
+      <strong>Taso:</strong> {{ thread.pelitaso }} | <strong>Kesto:</strong> {{ thread.kesto }} h | <strong>Tarvitaan:</strong> {{ thread.pelaajien_maara }} pelaajaa
+    </p>
+    <p style="color: #555; font-size: 0.9em;">
       {{ thread.total }} vastausta, uusin {{ thread.last }}
     </p>
   </div>
+  {% else %}
+  <p>Ei avoimia pelivuoroja tällä hetkellä.</p>
   {% endfor %}
 {% endblock %}

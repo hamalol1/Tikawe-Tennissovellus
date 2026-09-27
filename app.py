@@ -120,23 +120,38 @@ def logout():
         del session["csrf_token"]
     return redirect("/")
 
-@app.route("/new_thread", methods=["POST"])
+@app.route("/new_thread", methods=["GET", "POST"])
 def new_thread():
     require_login()
-    check_csrf() 
-    
-    title = request.form["title"]
-    content = request.form["content"]
-    
-    if not title or len(title) > 100 or len(content) > 5000:
-        abort(403)
+    if request.method == "GET":
+        return render_template("new_thread.html")
+
+    if request.method == "POST":
+        check_csrf() 
+        peliaika = request.form["peliaika"]
+        pelipaikka = request.form["pelipaikka"]
+        pelitaso = request.form["pelitaso"]
+        pelaajien_maara = request.form["pelaajien_maara"]
+        kesto = request.form["kesto"]
+        content = request.form["content"]
         
-    user_id = session["user_id"]
+        sallitut_paikat = ["Kimpisen massatenniskentät", "Huhtiniemen sisähalli"]
+        sallitut_tasot = ["Aloittelija", "Keskitaso", "Kilpa"]
+        
+        try:
+            maara = int(pelaajien_maara)
+            kesto_h = int(kesto)
+        except ValueError:
+            abort(403)
+            
+        if pelipaikka not in sallitut_paikat or pelitaso not in sallitut_tasot or maara < 1 or maara > 4 or kesto_h < 1 or kesto_h > 10:
+            abort(403)
+            
+        user_id = session["user_id"]
+        forum.add_thread(peliaika, pelipaikka, pelitaso, maara, kesto_h, content, user_id)
+        flash("Pelivuoro ilmoitettu onnistuneesti!")
+        return redirect("/")
 
-    thread_id = forum.add_thread(title, content, user_id)
-    return redirect("/thread/" + str(thread_id))
-
-@app.route("/thread/<int:thread_id>")
 @app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):
     if "user_id" not in session:
@@ -144,12 +159,15 @@ def show_thread(thread_id):
         return redirect("/login")
 
     thread = forum.get_thread(thread_id)
-
     if not thread:
         abort(404)
         
     messages = forum.get_messages(thread_id)
-    return render_template("thread.html", thread=thread, messages=messages)
+    participants = forum.get_participants(thread_id)
+    
+    is_participant = any(p["id"] == session["user_id"] for p in participants)
+    
+    return render_template("thread.html", thread=thread, messages=messages, participants=participants, is_participant=is_participant)
 
 @app.route("/new_message", methods=["POST"])
 def new_message():
@@ -263,6 +281,33 @@ def show_image(user_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
+
+@app.route("/join", methods=["POST"])
+def join():
+    require_login()
+    check_csrf()
+    thread_id = int(request.form["thread_id"])
+    thread = forum.get_thread(thread_id)
+    participants = forum.get_participants(thread_id)
+    
+    if len(participants) < thread["pelaajien_maara"]:
+        try:
+            forum.add_participant(session["user_id"], thread_id)
+            flash("Olet nyt mukana pelivuorolla!")
+        except sqlite3.IntegrityError:
+            flash("Olet jo mukana.")
+    else:
+        flash("Vuoro on jo täynnä.")
+    return redirect("/thread/" + str(thread_id))
+
+@app.route("/leave", methods=["POST"])
+def leave():
+    require_login()
+    check_csrf()
+    thread_id = int(request.form["thread_id"])
+    forum.remove_participant(session["user_id"], thread_id)
+    flash("Ilmoittautuminen peruttu.")
+    return redirect("/thread/" + str(thread_id))
 
 @app.errorhandler(403)
 def forbidden(e):

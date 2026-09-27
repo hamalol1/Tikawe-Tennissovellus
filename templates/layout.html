@@ -13,9 +13,10 @@
   <div class="nav">
     <nav>
       <ul>
-        <li><a href="/">Pelivuorot</a></li>
+        <li><a href="/">Etusivu</a></li>
         <li><a href="/search">Haku</a></li>
         {% if session.user_id %}
+        <li><a href="/new_thread">Luo Pelivuoro</a></li>
         <li><a href="/user/{{ session.user_id }}">Oma profiili</a></li>
         <li><a href="/logout">Kirjaudu ulos</a></li>
         {% else %}

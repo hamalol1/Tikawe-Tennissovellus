@@ -7,7 +7,11 @@ CREATE TABLE users (
 
 CREATE TABLE threads (
     id INTEGER PRIMARY KEY,
-    title TEXT,
+    peliaika TEXT,
+    pelipaikka TEXT,
+    pelitaso TEXT,
+    pelaajien_maara INTEGER,
+    kesto INTEGER,
     user_id INTEGER REFERENCES users
 );
 
@@ -18,6 +22,13 @@ CREATE TABLE messages (
     user_id INTEGER REFERENCES users,
     thread_id INTEGER REFERENCES threads,
     status INTEGER DEFAULT 1
+);
+
+CREATE TABLE participants (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users,
+    thread_id INTEGER REFERENCES threads,
+    UNIQUE(user_id, thread_id)
 );
 
 CREATE TABLE visits (
