@@ -1,42 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{ thread.title }}</title>
-</head>
-<body>
-  <h1>{{ thread.title }}</h1>
-  <p><a href="/">Palaa etusivulle</a></p>
+{% extends "layout.html" %}
+
+{% block title %}{{ thread.title }}{% endblock %}
+
+{% block content %}
+  <h2>{{ thread.title }}</h2>
   <hr />
 
   {% for message in messages %}
-  <p id="{{ message.id }}">
-    <a href="/user/{{ message.user_id }}">{{ message.username }}</a> ({{ message.sent_at }}):
-  </p>
-  <p>
-    {{ message.content | show_lines }}
-  </p>
-  {% if message.user_id == session.user_id %}
-  <p>
-    <a href="/edit/{{ message.id }}">Muokkaa</a> |
-    <a href="/remove/{{ message.id }}">Poista</a>
-  </p>
-  {% endif %}
-  <hr />
+  <div class="thread" id="{{ message.id }}">
+    <p>
+      <strong><a href="/user/{{ message.user_id }}">{{ message.username }}</a></strong> <span style="color: #666; font-size: 0.9em;">({{ message.sent_at }})</span>:
+    </p>
+    <p>
+      {{ message.content | show_lines }}
+    </p>
+    {% if message.user_id == session.user_id %}
+    <p style="margin-top: 1em; font-size: 0.9em;">
+      <a href="/edit/{{ message.id }}" style="color: #2e7d32;">Muokkaa</a> |
+      <a href="/remove/{{ message.id }}" style="color: #c62828;">Poista</a>
+    </p>
+    {% endif %}
+  </div>
   {% endfor %}
 
   {% if session.user_id %}
-  <h2>Uusi viesti</h2>
+  <h3 style="margin-top: 2em;">Vastaa ilmoitukseen</h3>
   <form action="/new_message" method="post">
     <p>
       <label for="content">Viesti</label>:<br />
-      <textarea id="content" name="content" rows="5" cols="40" maxlength="5000" required></textarea>
+      <textarea id="content" name="content" rows="4" maxlength="5000" required></textarea>
     </p>
     <input type="hidden" name="thread_id" value="{{ thread.id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä" />
+    <input type="submit" value="Lähetä vastaus" />
   </form>
-  {% else %}
-  <p><a href="/login">Kirjaudu sisään</a> lähettääksesi viestin.</p>
   {% endif %}
-</body>
-</html>
+{% endblock %}

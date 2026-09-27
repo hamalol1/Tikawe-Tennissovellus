@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Haku</title>
-</head>
-<body>
-  <h2>Etsi viestejä</h2>
+{% extends "layout.html" %}
+
+{% block title %}Haku{% endblock %}
+
+{% block content %}
+  <h2>Etsi pelivuoroja</h2>
   <form action="/search" method="get">
     <p>
-      Hakusana:
-      {% if query %}
-      <input type="text" name="query" value="{{ query }}" />
-      {% else %}
-      <input type="text" name="query" />
-      {% endif %}
+      <label for="query">Hakusana</label>:<br />
+      <input type="text" id="query" name="query" value="{{ query if query else '' }}" />
     </p>
     <input type="submit" value="Hae" />
   </form>
@@ -32,5 +27,4 @@
   {% endfor %}
   </ul>
   {% endif %}
-</body>
-</html>
+{% endblock %}

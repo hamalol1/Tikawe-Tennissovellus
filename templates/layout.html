@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %} - Tikawe Tennis</title>
+  <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+  <div class="header">
+    <h1>TIKAWE-TENNIS</h1>
+  </div>
+
+  <div class="nav">
+    <nav>
+      <ul>
+        <li><a href="/">Pelivuorot</a></li>
+        <li><a href="/search">Haku</a></li>
+        {% if session.user_id %}
+        <li><a href="/user/{{ session.user_id }}">Oma profiili</a></li>
+        <li><a href="/logout">Kirjaudu ulos</a></li>
+        {% else %}
+        <li><a href="/register">Luo tunnus</a></li>
+        <li><a href="/login">Kirjaudu sisään</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="content">
+    {% for message in get_flashed_messages() %}
+    <p class="info">{{ message }}</p>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

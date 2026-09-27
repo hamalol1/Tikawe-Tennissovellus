@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Käyttäjä {{ user.username }}</title>
-</head>
-<body>
-  <h1>Käyttäjä {{ user.username }}</h1>
+{% extends "layout.html" %}
 
-  {% for message in get_flashed_messages() %}
-  <p><b>{{ message }}</b></p>
-  {% endfor %}
+{% block title %}Käyttäjä {{ user.username }}{% endblock %}
+
+{% block content %}
+  <h2>Käyttäjä {{ user.username }}</h2>
 
   {% if user.has_image %}
-  <img src="/image/{{ user.id }}" alt="Käyttäjän {{ user.username }} kuva" />
+  <img src="/image/{{ user.id }}" alt="Käyttäjän {{ user.username }} kuva" style="max-width: 200px; border-radius: 8px; margin-bottom: 1em;" />
   {% endif %}
 
   {% if user.id == session.user_id %}
@@ -35,5 +30,4 @@
   {% endfor %}
   </ul>
   {% endif %}
-</body>
-</html>
+{% endblock %}

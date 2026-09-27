@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Rekisteröinti</title>
-</head>
-<body>
-  <h2>Luo uusi tunnus</h2>
+{% extends "layout.html" %}
 
-  {% for message in get_flashed_messages() %}
-  <p><b>{{ message }}</b></p>
-  {% endfor %}
+{% block title %}Rekisteröinti{% endblock %}
+
+{% block content %}
+  <h2>Luo uusi tunnus</h2>
 
   <form action="/register" method="post">
     <p>
@@ -23,7 +18,7 @@
       <label for="password2">Salasana uudestaan</label>: <br />
       <input type="password" id="password2" name="password2" required />
     </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Luo tunnus" />
   </form>
-</body>
-</html>
+{% endblock %}

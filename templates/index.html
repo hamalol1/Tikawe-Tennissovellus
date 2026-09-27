@@ -1,51 +1,45 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Etusivu</title>
-</head>
-<body>
-  {% for message in get_flashed_messages() %}
-  <p><b>{{ message }}</b></p>
-  {% endfor %}
+{% extends "layout.html" %}
 
+{% block title %}Etusivu{% endblock %}
+
+{% block content %}
   {% if session.username %}
-  <p>
-    Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a>
-  </p>
+  <p>Olet kirjautunut nimellä <strong>{{ session.username }}</strong></p>
   
-  <h2>Uusi ketju</h2>
+  <h2>Uusi peliseura-ilmoitus</h2>
   <form action="/new_thread" method="post">
     <p>
-      <label for="title">Otsikko</label>: <br />
+      <label for="title">Otsikko (Paikka, aika, taso)</label>: <br />
       <input type="text" id="title" name="title" maxlength="100" required />
     </p>
     <p>
-      <label for="content">Viesti</label>: <br />
-      <textarea id="content" name="content" rows="5" cols="40" maxlength="5000" required></textarea>
+      <label for="content">Tarkemmat tiedot</label>: <br />
+      <textarea id="content" name="content" rows="5" maxlength="5000" required></textarea>
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä" />
+    <input type="submit" value="Julkaise ilmoitus" />
   </form>
   {% else %}
-  <p><a href="/login">Kirjaudu sisään tai luo tunnus</a> osallistuaksesi keskusteluun.</p>
+  <p><a href="/login">Kirjaudu sisään tai luo tunnus</a> etsiäksesi peliseuraa.</p>
   {% endif %}
 
   <hr />
-  <h2>Keskustelut</h2>
+  <h2>Avoimet pelivuorot</h2>
   
   <p>
     <a href="/{{ page - 1 }}">&lt;&lt;</a>
     Sivu {{ page }}/{{ page_count }}
     <a href="/{{ page + 1 }}">&gt;&gt;</a>
   </p>
-  <hr />
 
   {% for thread in threads %}
-  <p>
-    <a href="/thread/{{ thread.id }}">{{ thread.title }}</a><br />
-    {{ thread.total }} viestiä, uusin {{ thread.last }}
-  </p>
-  <hr />
+  <div class="thread">
+    <p>
+      <a href="/thread/{{ thread.id }}" style="font-size: 1.2em; font-weight: bold; color: #1b5e20;">{{ thread.title }}</a>
+    </p>
+    <p style="color: #555;">
+      {{ thread.total }} vastausta, uusin {{ thread.last }}
+    </p>
+  </div>
   {% endfor %}
-</body>
-</html>
+{% endblock %}

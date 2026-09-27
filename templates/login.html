@@ -1,23 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Kirjautuminen</title>
-</head>
-<body>
-  <h2>Kirjaudu sisään</h2>
+{% extends "layout.html" %}
 
-  {% for message in get_flashed_messages() %}
-  <p><b>{{ message }}</b></p>
-  {% endfor %}
+{% block title %}Kirjautuminen{% endblock %}
+
+{% block content %}
+  <h2>Kirjaudu sisään</h2>
 
   <form action="/login" method="post">
     <p>
       <label for="username">Tunnus</label>:<br />
-      <input type="text" id="username" name="username" />
+      <input type="text" id="username" name="username" required />
     </p>
     <p>
       <label for="password">Salasana</label>:<br />
-      <input type="password" id="password" name="password" />
+      <input type="password" id="password" name="password" required />
     </p>
     
     {% if next_page %}
@@ -25,9 +20,9 @@
     {% else %}
     <input type="hidden" name="next_page" value="/" />
     {% endif %}
-
+    
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Kirjaudu" />
   </form>
   <p><a href="/register">Luo uusi tunnus</a></p>
-</body>
-</html>
+{% endblock %}
