@@ -8,18 +8,12 @@
   <form action="/login" method="post">
     <p>
       <label for="username">Tunnus</label>:<br />
-      <input type="text" id="username" name="username" required />
+      <input type="text" id="username" name="username" value="{{ filled_username if filled_username else '' }}" required />
     </p>
     <p>
       <label for="password">Salasana</label>:<br />
       <input type="password" id="password" name="password" required />
     </p>
-    
-    {% if next_page %}
-    <input type="hidden" name="next_page" value="{{ next_page }}" />
-    {% else %}
-    <input type="hidden" name="next_page" value="/" />
-    {% endif %}
     
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Kirjaudu" />

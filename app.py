@@ -40,6 +40,10 @@ def check_csrf():
 @app.route("/")
 @app.route("/<int:page>")
 def index(page=1):
+    if "user_id" not in session:
+        flash("Kirjaudu sisään nähdäksesi avoimet pelivuorot.")
+        return redirect("/login")
+
     page_size = 10
     total_threads = forum.thread_count()
     page_count = math.ceil(total_threads / page_size)
@@ -82,27 +86,29 @@ def register():
             return render_template("register.html", filled={"username": username})
 
 @app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html", next_page=request.referrer)
+        return render_template("login.html")
 
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        next_page = request.form["next_page"]
         
         sql = "SELECT id, password_hash FROM users WHERE username = ?"
         result = db.query(sql, [username])
         
         if result and check_password_hash(result[0]["password_hash"], password):
+            user_id = result[0]["id"]
             session["username"] = username
-            session["user_id"] = result[0]["id"]
+            session["user_id"] = user_id
             session["csrf_token"] = secrets.token_hex(16)
             
-            return redirect(next_page if next_page else "/")
+            flash("Kirjautuminen onnistui!")
+            return redirect("/user/" + str(user_id))
         else:
             flash("VIRHE: Väärä tunnus tai salasana")
-            return render_template("login.html", next_page=next_page)
+            return render_template("login.html", filled_username=username)
 
 
 @app.route("/logout")
@@ -131,7 +137,12 @@ def new_thread():
     return redirect("/thread/" + str(thread_id))
 
 @app.route("/thread/<int:thread_id>")
+@app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):
+    if "user_id" not in session:
+        flash("Kirjaudu sisään nähdäksesi ilmoituksen tarkemmat tiedot.")
+        return redirect("/login")
+
     thread = forum.get_thread(thread_id)
 
     if not thread:
@@ -203,6 +214,10 @@ def remove_message(message_id):
 
 @app.route("/search")
 def search():
+    if "user_id" not in session:
+        flash("Kirjaudu sisään etsiäksesi pelivuoroja.")
+        return redirect("/login")
+
     query = request.args.get("query")
     results = forum.search(query) if query else []
     return render_template("search.html", query=query, results=results)
@@ -248,3 +263,13 @@ def show_image(user_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
+
+@app.errorhandler(403)
+def forbidden(e):
+    flash("Pääsy evätty. Kirjaudu sisään käyttääksesi tätä toimintoa.")
+    return redirect("/login")
+
+@app.errorhandler(404)
+def not_found(e):
+    flash("Etsimääsi sivua tai ilmoitusta ei löytynyt.")
+    return redirect("/")
