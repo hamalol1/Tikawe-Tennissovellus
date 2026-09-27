@@ -9,6 +9,7 @@ import config
 import db
 import forum
 import users
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -123,17 +124,32 @@ def logout():
 @app.route("/new_thread", methods=["GET", "POST"])
 def new_thread():
     require_login()
+
     if request.method == "GET":
-        return render_template("new_thread.html")
+        # Lasketaan seuraava tasatunti HTML-lomakkeen minimiajaksi
+        nyt = datetime.now()
+        seuraava_tunti = (nyt + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
+        min_time = seuraava_tunti.strftime("%Y-%m-%dT%H:%M")
+        return render_template("new_thread.html", min_time=min_time)
 
     if request.method == "POST":
         check_csrf() 
-        peliaika = request.form["peliaika"]
+        
+        peliaika_raw = request.form["peliaika"]
         pelipaikka = request.form["pelipaikka"]
         pelitaso = request.form["pelitaso"]
         pelaajien_maara = request.form["pelaajien_maara"]
         kesto = request.form["kesto"]
         content = request.form["content"]
+        
+        try:
+            dt = datetime.strptime(peliaika_raw, "%Y-%m-%dT%H:%M")
+            # Tarkistetaan takapäässä, että aika on tulevaisuudessa ja kyseessä on tasatunti (minuutit tasan 0)
+            if dt < datetime.now() or dt.minute != 0:
+                abort(403)
+            peliaika = dt.strftime("%d.%m.%Y klo %H:%M")
+        except ValueError:
+            abort(403)
         
         sallitut_paikat = ["Kimpisen massatenniskentät", "Huhtiniemen sisähalli"]
         sallitut_tasot = ["Aloittelija", "Keskitaso", "Kilpa"]
@@ -147,8 +163,13 @@ def new_thread():
         if pelipaikka not in sallitut_paikat or pelitaso not in sallitut_tasot or maara < 1 or maara > 4 or kesto_h < 1 or kesto_h > 10:
             abort(403)
             
+        if not peliaika or len(content) > 5000:
+            abort(403)
+            
         user_id = session["user_id"]
+
         forum.add_thread(peliaika, pelipaikka, pelitaso, maara, kesto_h, content, user_id)
+        
         flash("Pelivuoro ilmoitettu onnistuneesti!")
         return redirect("/")
 

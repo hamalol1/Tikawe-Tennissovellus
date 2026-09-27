@@ -18,54 +18,36 @@
         <i>Ei vielä osallistujia</i>
       {% endif %}
     </p>
+
+    {% if messages %}
+    <hr style="border: 0; border-top: 1px solid #a5d6a7; margin: 1em 0;" />
+    <div style="margin-bottom: 1em;">
+      <strong style="display: block; margin-bottom: 0.5em;">Lisätiedot:</strong>
+      {{ messages[0].content | show_lines }}
+    </div>
     
-    <!-- Painikelogiikka -->
+    {% if session.user_id == thread.user_id %}
+    <p style="font-size: 0.9em; margin: 0 0 1em 0;">
+      <a href="/edit/{{ messages[0].id }}" style="color: #2e7d32; font-weight: bold;">Muokkaa lisätietoja</a> |
+      <a href="/remove/{{ messages[0].id }}" style="color: #c62828;">Poista ilmoitus</a>
+    </p>
+    {% endif %}
+    {% endif %}
+    
     {% if is_participant %}
       <form action="/leave" method="post" style="display:inline;">
         <input type="hidden" name="thread_id" value="{{ thread.id }}">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="submit" value="Peru ilmoittautuminen" style="background-color: #c62828;">
+        <input type="submit" value="Peru ilmoittautuminen" style="background-color: #c62828; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; cursor: pointer;">
       </form>
     {% elif participants|length < thread.pelaajien_maara and session.user_id != thread.user_id %}
       <form action="/join" method="post" style="display:inline;">
         <input type="hidden" name="thread_id" value="{{ thread.id }}">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="submit" value="Ilmoittaudu mukaan">
+        <input type="submit" value="Ilmoittaudu mukaan" style="background-color: #2e7d32; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; cursor: pointer;">
       </form>
     {% elif participants|length >= thread.pelaajien_maara %}
       <p style="color: #c62828; font-weight: bold; margin: 0;">Vuoro on täynnä.</p>
     {% endif %}
   </div>
-  
-  <h3>Lisätiedot ja keskustelu</h3>
-  <hr style="margin-bottom: 1em;" />
-
-  {% for message in messages %}
-  <div class="thread" id="{{ message.id }}">
-    <p>
-      <strong><a href="/user/{{ message.user_id }}">{{ message.username }}</a></strong> <span style="color: #666; font-size: 0.9em;">({{ message.sent_at }})</span>:
-    </p>
-    <p>
-      {{ message.content | show_lines }}
-    </p>
-    {% if message.user_id == session.user_id %}
-    <p style="margin-top: 1em; font-size: 0.9em;">
-      <a href="/edit/{{ message.id }}" style="color: #2e7d32; font-weight: bold;">Muokkaa tekstiä</a> |
-      <a href="/remove/{{ message.id }}" style="color: #c62828;">Poista</a>
-    </p>
-    {% endif %}
-  </div>
-  {% endfor %}
-
-  {% if session.user_id %}
-  <h3 style="margin-top: 2em;">Kysy lisätietoja</h3>
-  <form action="/new_message" method="post">
-    <p>
-      <textarea id="content" name="content" rows="4" maxlength="5000" placeholder="Kirjoita viesti tähän..." required></textarea>
-    </p>
-    <input type="hidden" name="thread_id" value="{{ thread.id }}" />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä viesti" />
-  </form>
-  {% endif %}
 {% endblock %}

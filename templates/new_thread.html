@@ -7,7 +7,7 @@
   <form action="/new_thread" method="post">
     <p>
       <label for="peliaika">Peliaika</label>: <br />
-      <input type="text" id="peliaika" name="peliaika" placeholder="esim. Ma 12.10. klo 18:00" maxlength="100" required />
+      <input type="datetime-local" id="peliaika" name="peliaika" min="{{ min_time }}" step="3600" required />
     </p>
     <p>
       <label for="pelipaikka">Pelipaikka</label>: <br />
