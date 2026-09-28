@@ -1,19 +1,22 @@
 # tikawe
-Tietokannat ja Web ohjelmointi course github repository.
-- HUOM. en ole vielä tehnyt tässä luettavia tennissovellusominaisuuksia, vaan olen tehnyt kurssin esimerkkisovellusta. Muokaan sen sitten vastaamaan tätä tennissovellustani. 
+Tietokannat ja Web ohjelmointi kurssin repo.
 
+Tennisvuoron ilmoitus sovellus, josta löytyy seuraavat ominaisuudet:
+- Sovelluksessa käyttäjä pystyy etsimään peliseuraa tennikseen. 
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
-- Käyttäjä pystyy lisäämään profiilikuvan.
-- Sovelluksessa käyttäjät pystyvät etsimään peliseuraa tennikseen. Ilmoituksessa lukee missä ja milloin pelivuoro on sekä tarvittava pelaajien määrä.
-- Käyttäjä pystyy lisäämään ilmoituksia ja muokkaamaan ja poistamaan niitä.
-- Käyttäjä näkee sovellukseen lisätyt ilmoitukset.
-- Käyttäjä pystyy etsimään ilmoituksia sen perusteella, milloin vuoro on.
-- Käyttäjäsivu näyttää, montako ilmoitusta käyttäjä on lähettänyt ja listan ilmoituksista.
-- Käyttäjä pystyy valitsemaan esimerkiksi seuraavia luokitteluja:
-    Pelipaikka: Kumpula Unisport tai Otaniemi Unisport
-    Pelaajan taso: aloittelija, keskitaso tai edistynyt
-- Käyttäjä pystyy valitsemaan ilmoitukselle yhden tai useamman luokittelun (esim. talin tenniskeskus, keskitason pelaaja).
-- Käyttäjä pystyy ilmoittautumaan pelivuoroon. Ilmoituksessa näytetään, ketkä käyttäjät ovat ilmoittautuneet.
+- Käyttäjä pystyy luoda, muokkaa ja poistaa pelivuorohakuilmoituksia:
+   - Ilmoituksessa kerrotaan missä ja milloin pelivuoro on, tarvittavien pelaajien määrä, haluttu pelaajien taitotaso, pelivuoron kesto, ilmoituksen tekijä, ilmoittautuneet ja mahdolliset lisätiedot.
+- Käyttäjä pystyy valitsemaan ilmoituksessa seuraavia luokitteluja:
+    - Pelipaikka: Kimpisen massatenniskentät tai Huhtiniemen sisähalli.
+    - Pelaajan taso: aloittelija, keskitaso tai edistynyt.
+    - Haluttu aika: kalenterivalikko missä voi valita vain tulevaisuuden aikoja tasatunnittain.
+    - Pelivuoron kesto: tunneittain 1h - 10h.
+    - Pelaajien määrä: 1 - 4 pelaajaa. 
+- Käyttäjä näkee etusivulla kaikki sovellukseen lisätyt ilmoitukset.
+- Käyttäjä pystyy etsimään ilmoituksia sen perusteella, milloin, missä ja montaka pelaajaa tarvitaan.
+- Profiilisivu näyttää, montako ilmoitusta käyttäjä on lähettänyt ja listan omista ilmoituksista.
+- Pofiilisivuun käyttäjä voi lisätä oman profiilikuvan.
+- Käyttäjä pystyy ilmoittautumaan pelivuoroon ja perumaan ilmoittautumisen.
 
 ## Sovelluksen testaaminen paikallisesti
 
