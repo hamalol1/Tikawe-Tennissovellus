@@ -262,12 +262,24 @@ def search():
     return render_template("search.html", query=query, results=results)
 
 @app.route("/user/<int:user_id>")
-def show_user(user_id):
+@app.route("/user/<int:user_id>/<int:page>")
+def show_user(user_id, page=1):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    messages = users.get_messages(user_id)
-    return render_template("user.html", user=user, messages=messages)
+        
+    page_size = 10
+    total_messages = users.message_count(user_id)
+    page_count = math.ceil(total_messages / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/user/" + str(user_id) + "/1")
+    if page > page_count:
+        return redirect("/user/" + str(user_id) + "/" + str(page_count))
+        
+    messages = users.get_messages(user_id, page, page_size)
+    return render_template("user.html", user=user, messages=messages, page=page, page_count=page_count, total_messages=total_messages)
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
