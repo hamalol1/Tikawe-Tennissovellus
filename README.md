@@ -20,11 +20,11 @@ Tennisvuoron ilmoitus sovellus, josta löytyy seuraavat ominaisuudet:
 
 ## Sovelluksen testaaminen paikallisesti
 
-1. Kloonaa repositorio omalle koneellesi ja siirry projektikansioon.
-2. Asenna Flask: Varmista, että koneellasi on Python asennettuna. Asenna Flask suorittamalla komentoikkunassa komento:
+1. Kloonaa repo omalle koneellesi ja siirry projektikansioon.
+2. Asenna Flask: Varmista, että koneellasi on Python asennettuna. Asenna Flask suorittamalla komento:
    `pip install Flask`
-3. Alusta tietokanta: Luo paikallinen tietokantatiedosto ja sen taulut `schema.sql` -tiedoston avulla suorittamalla komentoikkunassa:
+3. Alusta tietokanta: Luo paikallinen tietokantatiedosto ja sen taulut `schema.sql` -tiedoston avulla suorittamalla komento:
    `sqlite3 database.db < schema.sql`
-4. äynnistä sovellus: Käynnistä paikallinen palvelin komennolla:
+4. Käynnistä sovellus paikallisessa palvelimessa komennolla:
    `flask run`
 5. Testaa: Avaa verkkoselain ja siirry osoitteeseen `http://127.0.0.1:5000`.
