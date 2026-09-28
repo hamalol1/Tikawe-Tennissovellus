@@ -257,9 +257,19 @@ def search():
         flash("Kirjaudu sisään etsiäksesi pelivuoroja.")
         return redirect("/login")
 
-    query = request.args.get("query")
-    results = forum.search(query) if query else []
-    return render_template("search.html", query=query, results=results)
+    peliaika = request.args.get("peliaika", "")
+    pelipaikka = request.args.get("pelipaikka", "")
+    pelaajien_maara = request.args.get("pelaajien_maara", "")
+    
+    if "peliaika" in request.args:
+        results = forum.search_threads(peliaika, pelipaikka, pelaajien_maara)
+        searched = True
+    else:
+        results = []
+        searched = False
+
+    return render_template("search.html", results=results, searched=searched, 
+                           peliaika=peliaika, pelipaikka=pelipaikka, pelaajien_maara=pelaajien_maara)
 
 @app.route("/user/<int:user_id>")
 @app.route("/user/<int:user_id>/<int:page>")

@@ -56,16 +56,26 @@ def remove_message(message_id):
     sql = "UPDATE messages SET status = 0 WHERE id = ?"
     db.execute(sql, [message_id])
 
-def search(query):
-    sql = """SELECT m.id message_id, m.thread_id, 
+def search_threads(peliaika, pelipaikka, pelaajien_maara):
+    sql = """SELECT t.id as thread_id, 
                     t.pelipaikka || ' (' || t.peliaika || ')' as thread_title,
-                    m.sent_at, u.username
-             FROM threads t, messages m, users u
-             WHERE t.id = m.thread_id AND u.id = m.user_id AND m.status = 1 AND
-                   (m.content LIKE ? OR t.pelipaikka LIKE ? OR t.peliaika LIKE ?)
-             ORDER BY m.sent_at DESC"""
-    search_term = "%" + query + "%"
-    return db.query(sql, [search_term, search_term, search_term])
+                    u.username, t.pelitaso, t.pelaajien_maara, t.kesto
+             FROM threads t, users u
+             WHERE t.user_id = u.id"""
+    params = []
+    
+    if peliaika:
+        sql += " AND t.peliaika LIKE ?"
+        params.append("%" + peliaika + "%")
+    if pelipaikka:
+        sql += " AND t.pelipaikka = ?"
+        params.append(pelipaikka)
+    if pelaajien_maara:
+        sql += " AND t.pelaajien_maara = ?"
+        params.append(pelaajien_maara)
+        
+    sql += " ORDER BY t.id DESC"
+    return db.query(sql, params)
 
 def get_participants(thread_id):
     sql = """SELECT u.id, u.username 
