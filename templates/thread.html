@@ -28,7 +28,7 @@
     
     {% if session.user_id == thread.user_id %}
     <p style="font-size: 0.9em; margin: 0 0 1em 0;">
-      <a href="/edit/{{ messages[0].id }}" style="color: #2e7d32; font-weight: bold;">Muokkaa lisätietoja</a> |
+      <a href="/edit_thread/{{ thread.id }}" style="color: #2e7d32; font-weight: bold;">Muokkaa ilmoitusta</a> |
       <form action="/remove_thread/{{ thread.id }}" method="post" style="display:inline;">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="submit" value="Poista ilmoitus" style="background-color: transparent; color: #c62828; border: none; cursor: pointer; text-decoration: underline; font-family: inherit; font-size: 1em; padding: 0;">

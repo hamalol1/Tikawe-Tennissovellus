@@ -64,12 +64,25 @@ def register():
         return render_template("register.html", filled={})
 
     if request.method == "POST":
-        username = request.form["username"]
-        if len(username) > 16:
-            abort(403)
-            
+        username = request.form["username"].strip()
         password1 = request.form["password1"]
         password2 = request.form["password2"]
+
+        if not username or " " in username:
+            flash("VIRHE: Käyttäjänimi ei saa olla tyhjä tai sisältää välilyöntejä")
+            return render_template("register.html", filled={"username": username})
+
+        if len(username) > 16:
+            flash("VIRHE: Käyttäjänimi saa olla enintään 16 merkkiä pitkä")
+            return render_template("register.html", filled={"username": username})
+            
+        if " " in password1:
+            flash("VIRHE: Salasana ei saa sisältää välilyöntejä")
+            return render_template("register.html", filled={"username": username})
+
+        if len(password1) < 4:
+            flash("VIRHE: Salasanan pitää olla vähintään 4 merkkiä pitkä")
+            return render_template("register.html", filled={"username": username})
 
         if password1 != password2:
             flash("VIRHE: Antamasi salasanat eivät ole samat")
@@ -342,6 +355,77 @@ def leave():
     forum.remove_participant(session["user_id"], thread_id)
     flash("Ilmoittautuminen peruttu.")
     return redirect("/thread/" + str(thread_id))
+
+@app.route("/edit_thread/<int:thread_id>", methods=["GET", "POST"])
+def edit_thread(thread_id):
+    require_login()
+    thread = forum.get_thread(thread_id)
+    
+    if not thread:
+        abort(404)
+        
+    if thread["user_id"] != session["user_id"]:
+        abort(403)
+        
+    messages = forum.get_messages(thread_id)
+    first_message = messages[0] if messages else None
+
+    if request.method == "GET":
+        nyt = datetime.now()
+        seuraava_tunti = (nyt + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
+        min_time = seuraava_tunti.strftime("%Y-%m-%dT%H:%M")
+        
+        try:
+            dt = datetime.strptime(thread["play_time"], "%d.%m.%Y klo %H:%M")
+            current_play_time = dt.strftime("%Y-%m-%dT%H:%M")
+        except ValueError:
+            current_play_time = ""
+
+        return render_template("edit_thread.html", thread=thread, current_play_time=current_play_time, min_time=min_time, content=first_message["content"] if first_message else "")
+
+    if request.method == "POST":
+        check_csrf() 
+        
+        play_time_raw = request.form["play_time"]
+        location = request.form["location"]
+        skill_level = request.form["skill_level"]
+        player_count = request.form["player_count"]
+        duration = request.form["duration"]
+        content = request.form["content"]
+        
+        try:
+            dt = datetime.strptime(play_time_raw, "%Y-%m-%dT%H:%M")
+            if dt < datetime.now():
+                flash("Peliajan on oltava tulevaisuudessa.")
+                return redirect("/edit_thread/" + str(thread_id))
+                
+            dt = dt.replace(minute=0)
+            play_time = dt.strftime("%d.%m.%Y klo %H:%M")
+        except ValueError:
+            abort(403)
+        
+        allowed_locations = ["Kimpisen massatenniskentät", "Huhtiniemen sisähalli"]
+        allowed_levels = ["Aloittelija", "Keskitaso", "Kilpa"]
+        
+        try:
+            p_count = int(player_count)
+            duration_h = int(duration)
+        except ValueError:
+            abort(403)
+            
+        if location not in allowed_locations or skill_level not in allowed_levels or p_count < 1 or p_count > 4 or duration_h < 1 or duration_h > 10:
+            abort(403)
+            
+        if not play_time or len(content) > 5000:
+            abort(403)
+            
+        forum.update_thread(thread_id, play_time, location, skill_level, p_count, duration_h)
+        if first_message:
+            forum.update_message(first_message["id"], content)
+        
+        flash("Ilmoitusta muokattu onnistuneesti!")
+        return redirect("/thread/" + str(thread_id))
+
 
 @app.errorhandler(403)
 def forbidden(e):

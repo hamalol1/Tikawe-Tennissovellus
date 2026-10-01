@@ -4,21 +4,25 @@
 
 {% block content %}
   <h2>Luo uusi tunnus</h2>
+  
+  <p style="color: #555; font-size: 0.95em; margin-bottom: 1.5em; background-color: #f5f5f5; padding: 1em; border-radius: 4px;">
+    <strong>Ohje:</strong> Käyttäjänimi tai salasana eivät saa sisältää välilyöntejä. Salasanan pitää olla vähintään 4 merkkiä pitkä.
+  </p>
 
   <form action="/register" method="post">
     <p>
       <label for="username">Tunnus</label>: <br />
-      <input type="text" id="username" name="username" value="{{ filled.username }}" maxlength="16" required />
+      <input type="text" id="username" name="username" value="{{ filled.username }}" maxlength="16" pattern="^\S+$" title="Ei välilyöntejä" required />
     </p>
     <p>
       <label for="password1">Salasana</label>: <br />
-      <input type="password" id="password1" name="password1" required />
+      <input type="password" id="password1" name="password1" minlength="4" pattern="^\S+$" title="Ei välilyöntejä" required />
     </p>
     <p>
       <label for="password2">Salasana uudestaan</label>: <br />
-      <input type="password" id="password2" name="password2" required />
+      <input type="password" id="password2" name="password2" minlength="4" pattern="^\S+$" title="Ei välilyöntejä" required />
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Luo tunnus" />
+    <input type="submit" value="Luo tunnus" style="background-color: #2e7d32; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; cursor: pointer; margin-top: 1em;" />
   </form>
 {% endblock %}

@@ -4,6 +4,14 @@
 
 {% block content %}
   <h2>Ilmoita uusi pelivuoro</h2>
+  
+  <p style="color: #555; font-size: 0.95em; margin-bottom: 1.5em; background-color: #f1f8e9; border: 1px solid #c5e1a5; padding: 1em; border-radius: 4px;">
+    <strong>Ohje ilmoituksen luontiin:</strong><br/>
+    • Peliajan voi valita ainoastaan tasatunneittain.<br/>
+    • Vuoron maksimikesto on 10 tuntia.<br/>
+    • Pelaajien enimmäismäärä on 4.
+  </p>
+
   <form action="/new_thread" method="post">
     <p>
       <label for="play_time">Peliaika</label>: <br />
@@ -37,6 +45,6 @@
       <textarea id="content" name="content" rows="4" maxlength="5000" placeholder="Esim. Kenttämaksu puolitetaan..."></textarea>
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Julkaise ilmoitus" />
+    <input type="submit" value="Julkaise ilmoitus" style="background-color: #2e7d32; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; cursor: pointer; margin-top: 1em;" />
   </form>
 {% endblock %}

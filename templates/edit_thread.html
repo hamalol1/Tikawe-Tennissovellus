@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}Muokkaa pelivuoroa{% endblock %}
+
+{% block content %}
+  <h2>Muokkaa pelivuoroa</h2>
+  
+  <p style="color: #555; font-size: 0.95em; margin-bottom: 1.5em; background-color: #f1f8e9; border: 1px solid #c5e1a5; padding: 1em; border-radius: 4px;">
+    <strong>Ohje ilmoituksen muokkaukseen:</strong><br/>
+    • Peliajan voi valita ainoastaan tasatunneittain.<br/>
+    • Vuoron maksimikesto on 10 tuntia.<br/>
+    • Pelaajien enimmäismäärä on 4.
+  </p>
+
+  <form action="/edit_thread/{{ thread.id }}" method="post">
+    <p>
+      <label for="play_time">Peliaika</label>: <br />
+      <input type="datetime-local" id="play_time" name="play_time" value="{{ current_play_time }}" min="{{ min_time }}" step="3600" required />
+    </p>
+    <p>
+      <label for="location">Pelipaikka</label>: <br />
+      <select id="location" name="location" required>
+        <option value="Kimpisen massatenniskentät" {% if thread.location == 'Kimpisen massatenniskentät' %}selected{% endif %}>Kimpisen massatenniskentät</option>
+        <option value="Huhtiniemen sisähalli" {% if thread.location == 'Huhtiniemen sisähalli' %}selected{% endif %}>Huhtiniemen sisähalli</option>
+      </select>
+    </p>
+    <p>
+      <label for="skill_level">Pelaajan taso</label>: <br />
+      <select id="skill_level" name="skill_level" required>
+        <option value="Aloittelija" {% if thread.skill_level == 'Aloittelija' %}selected{% endif %}>Aloittelija</option>
+        <option value="Keskitaso" {% if thread.skill_level == 'Keskitaso' %}selected{% endif %}>Keskitaso</option>
+        <option value="Kilpa" {% if thread.skill_level == 'Kilpa' %}selected{% endif %}>Kilpa</option>
+      </select>
+    </p>
+    <p>
+      <label for="player_count">Tarvittavien pelaajien määrä</label>: <br />
+      <input type="number" id="player_count" name="player_count" min="1" max="4" value="{{ thread.player_count }}" required />
+    </p>
+    <p>
+      <label for="duration">Vuoron kesto (tunteina)</label>: <br />
+      <input type="number" id="duration" name="duration" min="1" max="10" value="{{ thread.duration }}" required />
+    </p>
+    <p>
+      <label for="content">Lisätiedot</label>: <br />
+      <textarea id="content" name="content" rows="4" maxlength="5000" placeholder="Esim. Kenttämaksu puolitetaan...">{{ content }}</textarea>
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Tallenna muutokset" style="background-color: #2e7d32; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; cursor: pointer; margin-top: 1em;" />
+  </form>
+{% endblock %}

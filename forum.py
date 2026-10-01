@@ -52,6 +52,13 @@ def update_message(message_id, content):
     sql = "UPDATE messages SET content = ? WHERE id = ?"
     db.execute(sql, [content, message_id])
 
+def update_thread(thread_id, play_time, location, skill_level, player_count, duration):
+    sql = """UPDATE threads 
+             SET play_time = ?, location = ?, skill_level = ?, player_count = ?, duration = ? 
+             WHERE id = ?"""
+    db.execute(sql, [play_time, location, skill_level, player_count, duration, thread_id])
+
+
 def remove_message(message_id):
     sql = "UPDATE messages SET status = 0 WHERE id = ?"
     db.execute(sql, [message_id])
