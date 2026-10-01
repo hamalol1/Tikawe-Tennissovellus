@@ -1,14 +1,14 @@
 import db
 
 def thread_count():
-    sql = "SELECT COUNT(*) FROM threads"
+    sql = "SELECT COUNT(*) FROM threads WHERE visible = 1"
     result = db.query(sql)
     return result[0][0] if result else 0
 
 def get_threads(page, page_size):
-    sql = """SELECT t.id, t.peliaika, t.pelipaikka, t.pelitaso, t.pelaajien_maara, t.kesto, COUNT(m.id) total, MAX(m.sent_at) last
+    sql = """SELECT t.id, t.play_time, t.location, t.skill_level, t.player_count, t.duration, COUNT(m.id) total, MAX(m.sent_at) last
              FROM threads t, messages m
-             WHERE t.id = m.thread_id AND m.status = 1
+             WHERE t.id = m.thread_id AND m.status = 1 AND t.visible = 1
              GROUP BY t.id
              ORDER BY t.id DESC
              LIMIT ? OFFSET ?"""
@@ -16,10 +16,10 @@ def get_threads(page, page_size):
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
 
-def add_thread(peliaika, pelipaikka, pelitaso, pelaajien_maara, kesto, content, user_id):
-    sql = """INSERT INTO threads (peliaika, pelipaikka, pelitaso, pelaajien_maara, kesto, user_id) 
+def add_thread(play_time, location, skill_level, player_count, duration, content, user_id):
+    sql = """INSERT INTO threads (play_time, location, skill_level, player_count, duration, user_id) 
              VALUES (?, ?, ?, ?, ?, ?)"""
-    db.execute(sql, [peliaika, pelipaikka, pelitaso, pelaajien_maara, kesto, user_id])
+    db.execute(sql, [play_time, location, skill_level, player_count, duration, user_id])
     thread_id = db.last_insert_id()
     add_message(content, user_id, thread_id)
     return thread_id
@@ -30,9 +30,9 @@ def add_message(content, user_id, thread_id):
     db.execute(sql, [content, user_id, thread_id])
 
 def get_thread(thread_id):
-    sql = """SELECT t.id, t.peliaika, t.pelipaikka, t.pelitaso, t.pelaajien_maara, t.kesto, t.user_id, u.username as creator
+    sql = """SELECT t.id, t.play_time, t.location, t.skill_level, t.player_count, t.duration, t.user_id, u.username as creator
              FROM threads t, users u 
-             WHERE t.user_id = u.id AND t.id = ?"""
+             WHERE t.user_id = u.id AND t.id = ? AND t.visible = 1"""
     result = db.query(sql, [thread_id])
     return result[0] if result else None
 
@@ -56,23 +56,27 @@ def remove_message(message_id):
     sql = "UPDATE messages SET status = 0 WHERE id = ?"
     db.execute(sql, [message_id])
 
-def search_threads(peliaika, pelipaikka, pelaajien_maara):
+def remove_thread(thread_id):
+    sql = "UPDATE threads SET visible = 0 WHERE id = ?"
+    db.execute(sql, [thread_id])
+
+def search_threads(play_time, location, player_count):
     sql = """SELECT t.id as thread_id, 
-                    t.pelipaikka || ' (' || t.peliaika || ')' as thread_title,
-                    u.username, t.pelitaso, t.pelaajien_maara, t.kesto
+                    t.location || ' (' || t.play_time || ')' as thread_title,
+                    u.username, t.skill_level, t.player_count, t.duration
              FROM threads t, users u
-             WHERE t.user_id = u.id"""
+             WHERE t.user_id = u.id AND t.visible = 1"""
     params = []
     
-    if peliaika:
-        sql += " AND t.peliaika LIKE ?"
-        params.append("%" + peliaika + "%")
-    if pelipaikka:
-        sql += " AND t.pelipaikka = ?"
-        params.append(pelipaikka)
-    if pelaajien_maara:
-        sql += " AND t.pelaajien_maara = ?"
-        params.append(pelaajien_maara)
+    if play_time:
+        sql += " AND t.play_time LIKE ?"
+        params.append("%" + play_time + "%")
+    if location:
+        sql += " AND t.location = ?"
+        params.append(location)
+    if player_count:
+        sql += " AND t.player_count = ?"
+        params.append(player_count)
         
     sql += " ORDER BY t.id DESC"
     return db.query(sql, params)

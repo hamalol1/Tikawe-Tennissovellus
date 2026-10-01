@@ -8,16 +8,17 @@ def get_user(user_id):
     return result[0] if result else None
 
 def message_count(user_id):
-    sql = "SELECT COUNT(*) FROM messages WHERE user_id = ? AND status = 1"
+    sql = "SELECT COUNT(*) FROM threads WHERE user_id = ? AND visible = 1"
     result = db.query(sql, [user_id])
     return result[0][0] if result else 0
 
 def get_messages(user_id, page, page_size):
     sql = """SELECT m.id, m.thread_id, 
-                    t.pelipaikka || ' (' || t.peliaika || ')' as thread_title, 
+                    t.location || ' (' || t.play_time || ')' as thread_title, 
                     m.sent_at
              FROM threads t, messages m
-             WHERE t.id = m.thread_id AND m.user_id = ? AND m.status = 1
+             WHERE t.id = m.thread_id AND t.user_id = ? AND m.status = 1 AND t.visible = 1
+             GROUP BY t.id
              ORDER BY m.sent_at DESC
              LIMIT ? OFFSET ?"""
     limit = page_size

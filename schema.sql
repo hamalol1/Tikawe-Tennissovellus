@@ -7,12 +7,13 @@ CREATE TABLE users (
 
 CREATE TABLE threads (
     id INTEGER PRIMARY KEY,
-    peliaika TEXT,
-    pelipaikka TEXT,
-    pelitaso TEXT,
-    pelaajien_maara INTEGER,
-    kesto INTEGER,
-    user_id INTEGER REFERENCES users
+    play_time TEXT,
+    location TEXT,
+    skill_level TEXT,
+    player_count INTEGER,
+    duration INTEGER,
+    user_id INTEGER REFERENCES users,
+    visible INTEGER DEFAULT 1
 );
 
 CREATE TABLE messages (

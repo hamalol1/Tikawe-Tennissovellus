@@ -21,11 +21,11 @@
   <div class="thread">
     <p>
       <a href="/thread/{{ thread.id }}" style="font-size: 1.2em; font-weight: bold; color: #1b5e20;">
-        {{ thread.pelipaikka }} ({{ thread.peliaika }})
+        {{ thread.location }} ({{ thread.play_time }})
       </a>
     </p>
     <p style="color: #333;">
-      <strong>Taso:</strong> {{ thread.pelitaso }} | <strong>Kesto:</strong> {{ thread.kesto }} h | <strong>Tarvitaan:</strong> {{ thread.pelaajien_maara }} pelaajaa
+      <strong>Taso:</strong> {{ thread.skill_level }} | <strong>Kesto:</strong> {{ thread.duration }} h | <strong>Tarvitaan:</strong> {{ thread.player_count }} pelaajaa
     </p>
     <p style="color: #555; font-size: 0.9em;">
       {{ thread.total }} vastausta, uusin {{ thread.last }}

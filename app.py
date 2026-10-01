@@ -87,7 +87,6 @@ def register():
             return render_template("register.html", filled={"username": username})
 
 @app.route("/login", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
@@ -111,7 +110,6 @@ def login():
             flash("VIRHE: Väärä tunnus tai salasana")
             return render_template("login.html", filled_username=username)
 
-
 @app.route("/logout")
 def logout():
     del session["username"]
@@ -126,7 +124,6 @@ def new_thread():
     require_login()
 
     if request.method == "GET":
-        # Lasketaan seuraava tasatunti HTML-lomakkeen minimiajaksi
         nyt = datetime.now()
         seuraava_tunti = (nyt + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
         min_time = seuraava_tunti.strftime("%Y-%m-%dT%H:%M")
@@ -135,40 +132,42 @@ def new_thread():
     if request.method == "POST":
         check_csrf() 
         
-        peliaika_raw = request.form["peliaika"]
-        pelipaikka = request.form["pelipaikka"]
-        pelitaso = request.form["pelitaso"]
-        pelaajien_maara = request.form["pelaajien_maara"]
-        kesto = request.form["kesto"]
+        play_time_raw = request.form["play_time"]
+        location = request.form["location"]
+        skill_level = request.form["skill_level"]
+        player_count = request.form["player_count"]
+        duration = request.form["duration"]
         content = request.form["content"]
         
         try:
-            dt = datetime.strptime(peliaika_raw, "%Y-%m-%dT%H:%M")
-            # Tarkistetaan takapäässä, että aika on tulevaisuudessa ja kyseessä on tasatunti (minuutit tasan 0)
-            if dt < datetime.now() or dt.minute != 0:
-                abort(403)
-            peliaika = dt.strftime("%d.%m.%Y klo %H:%M")
+            dt = datetime.strptime(play_time_raw, "%Y-%m-%dT%H:%M")
+            if dt < datetime.now():
+                flash("Peliajan on oltava tulevaisuudessa.")
+                return redirect("/new_thread")
+                
+            dt = dt.replace(minute=0)
+            play_time = dt.strftime("%d.%m.%Y klo %H:%M")
         except ValueError:
             abort(403)
         
-        sallitut_paikat = ["Kimpisen massatenniskentät", "Huhtiniemen sisähalli"]
-        sallitut_tasot = ["Aloittelija", "Keskitaso", "Kilpa"]
+        allowed_locations = ["Kimpisen massatenniskentät", "Huhtiniemen sisähalli"]
+        allowed_levels = ["Aloittelija", "Keskitaso", "Kilpa"]
         
         try:
-            maara = int(pelaajien_maara)
-            kesto_h = int(kesto)
+            p_count = int(player_count)
+            duration_h = int(duration)
         except ValueError:
             abort(403)
             
-        if pelipaikka not in sallitut_paikat or pelitaso not in sallitut_tasot or maara < 1 or maara > 4 or kesto_h < 1 or kesto_h > 10:
+        if location not in allowed_locations or skill_level not in allowed_levels or p_count < 1 or p_count > 4 or duration_h < 1 or duration_h > 10:
             abort(403)
             
-        if not peliaika or len(content) > 5000:
+        if not play_time or len(content) > 5000:
             abort(403)
             
         user_id = session["user_id"]
 
-        forum.add_thread(peliaika, pelipaikka, pelitaso, maara, kesto_h, content, user_id)
+        forum.add_thread(play_time, location, skill_level, p_count, duration_h, content, user_id)
         
         flash("Pelivuoro ilmoitettu onnistuneesti!")
         return redirect("/")
@@ -231,25 +230,17 @@ def edit_message(message_id):
         forum.update_message(message["id"], content)
         return redirect("/thread/" + str(message["thread_id"]))
 
-@app.route("/remove/<int:message_id>", methods=["GET", "POST"])
-def remove_message(message_id):
+@app.route("/remove_thread/<int:thread_id>", methods=["POST"])
+def remove_thread(thread_id):
     require_login()
-    message = forum.get_message(message_id)
-    
-    if not message:
-        abort(404)
-        
-    if message["user_id"] != session["user_id"]:
+    check_csrf()
+    thread = forum.get_thread(thread_id)
+    if not thread or thread["user_id"] != session["user_id"]:
         abort(403)
-
-    if request.method == "GET":
-        return render_template("remove.html", message=message)
-
-    if request.method == "POST":
-        check_csrf() 
-        if "continue" in request.form:
-            forum.remove_message(message["id"])
-        return redirect("/thread/" + str(message["thread_id"]))
+        
+    forum.remove_thread(thread_id)
+    flash("Ilmoitus poistettu onnistuneesti.")
+    return redirect("/")
 
 @app.route("/search")
 def search():
@@ -257,19 +248,19 @@ def search():
         flash("Kirjaudu sisään etsiäksesi pelivuoroja.")
         return redirect("/login")
 
-    peliaika = request.args.get("peliaika", "")
-    pelipaikka = request.args.get("pelipaikka", "")
-    pelaajien_maara = request.args.get("pelaajien_maara", "")
+    play_time = request.args.get("play_time", "")
+    location = request.args.get("location", "")
+    player_count = request.args.get("player_count", "")
     
-    if "peliaika" in request.args:
-        results = forum.search_threads(peliaika, pelipaikka, pelaajien_maara)
+    if "play_time" in request.args:
+        results = forum.search_threads(play_time, location, player_count)
         searched = True
     else:
         results = []
         searched = False
 
     return render_template("search.html", results=results, searched=searched, 
-                           peliaika=peliaika, pelipaikka=pelipaikka, pelaajien_maara=pelaajien_maara)
+                           play_time=play_time, location=location, player_count=player_count)
 
 @app.route("/user/<int:user_id>")
 @app.route("/user/<int:user_id>/<int:page>")
@@ -333,7 +324,7 @@ def join():
     thread = forum.get_thread(thread_id)
     participants = forum.get_participants(thread_id)
     
-    if len(participants) < thread["pelaajien_maara"]:
+    if len(participants) < thread["player_count"]:
         try:
             forum.add_participant(session["user_id"], thread_id)
             flash("Olet nyt mukana pelivuorolla!")

@@ -7,20 +7,20 @@
   
   <form action="/search" method="get" style="background-color: #f1f8e9; padding: 1.5em; border-radius: 4px; border: 1px solid #c5e1a5;">
     <p>
-      <label for="peliaika">Milloin? (päivämäärä tai kellonaika)</label>:<br />
-      <input type="text" id="peliaika" name="peliaika" value="{{ peliaika }}" placeholder="12.10. tai 18:00" />
+      <label for="play_time">Milloin? (päivämäärä tai kellonaika)</label>:<br />
+      <input type="text" id="play_time" name="play_time" value="{{ play_time }}" placeholder="12.10. tai 18:00" />
     </p>
     <p>
-      <label for="pelipaikka">Missä?</label>:<br />
-      <select id="pelipaikka" name="pelipaikka">
+      <label for="location">Missä?</label>:<br />
+      <select id="location" name="location">
         <option value="">Kaikki kentät</option>
-        <option value="Kimpisen massatenniskentät" {% if pelipaikka == 'Kimpisen massatenniskentät' %}selected{% endif %}>Kimpisen massatenniskentät</option>
-        <option value="Huhtiniemen sisähalli" {% if pelipaikka == 'Huhtiniemen sisähalli' %}selected{% endif %}>Huhtiniemen sisähalli</option>
+        <option value="Kimpisen massatenniskentät" {% if location == 'Kimpisen massatenniskentät' %}selected{% endif %}>Kimpisen massatenniskentät</option>
+        <option value="Huhtiniemen sisähalli" {% if location == 'Huhtiniemen sisähalli' %}selected{% endif %}>Huhtiniemen sisähalli</option>
       </select>
     </p>
     <p>
-      <label for="pelaajien_maara">Montako pelaajaa tarvitaan?</label>:<br />
-      <input type="number" id="pelaajien_maara" name="pelaajien_maara" min="1" max="4" value="{{ pelaajien_maara }}" placeholder="Valitse 1-4" />
+      <label for="player_count">Montako pelaajaa tarvitaan?</label>:<br />
+      <input type="number" id="player_count" name="player_count" min="1" max="4" value="{{ player_count }}" placeholder="Valitse 1-4" />
     </p>
     <input type="submit" value="Hae pelivuoroja" style="background-color: #2e7d32; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; cursor: pointer; margin-top: 1em;" />
   </form>
@@ -39,9 +39,9 @@
         </a>
       </p>
       <p style="margin: 0; color: #333; font-size: 0.9em;">
-        <strong>Taso:</strong> {{ result.pelitaso }} | 
-        <strong>Tarvitaan:</strong> {{ result.pelaajien_maara }} pelaajaa | 
-        <strong>Kesto:</strong> {{ result.kesto }} h
+        <strong>Taso:</strong> {{ result.skill_level }} | 
+        <strong>Tarvitaan:</strong> {{ result.player_count }} pelaajaa | 
+        <strong>Kesto:</strong> {{ result.duration }} h
       </p>
       <p style="margin: 0.5em 0 0 0; color: #666; font-size: 0.8em;">
         Ilmoittaja: {{ result.username }}
