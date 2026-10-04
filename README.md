@@ -44,5 +44,5 @@ Sovellusta testattiin suurella datan määrällä. `seed.py` avulla luotiin tiet
 - Profiilisivun lataus (käyttäjän omat ilmoitukset): 0.04 sekuntia.
 
 **Huomioita:**
-Tietokannassa on käytössä indeksi `CREATE INDEX idx_thread_messages ON messages (thread_id)`, joka nopeuttaa tietokantahakuja.'Tulosten perusteella sovellus skaalautuu erinomaisesti suuriin data määriin. Testidatan voi ajaa komennolla `python seed.py`.
+Tietokannassa on käytössä indeksi `CREATE INDEX idx_thread_messages ON messages (thread_id)`, joka nopeuttaa tietokantahakuja. Tulosten perusteella sovellus skaalautuu erinomaisesti suuriin data määriin. Testidatan voi ajaa komennolla `python seed.py`.
 
