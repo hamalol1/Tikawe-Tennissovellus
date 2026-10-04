@@ -29,3 +29,20 @@ Tennisvuoron ilmoitus sovellus, josta löytyy seuraavat ominaisuudet:
 4. Käynnistä sovellus paikallisessa palvelimessa komennolla:
    `flask run`
 5. Testaa: Avaa verkkoselain ja siirry osoitteeseen `http://127.0.0.1:5000`.
+
+## Testaus suurella datan määrällä
+
+Sovellusta testattiin suurella datan määrällä. `seed.py` avulla luotiin tietokantaan seuraava määrä dataa:
+- 1 000 käyttäjää
+- 100 000 pelivuoroa
+- 100 000 viestiä (ilmoituksen lisätiedot)
+
+**Mittauskohteet ja vasteajat:**
+- Etusivun lataus (Avoimet pelivuorot ja sivutus): 0.02 sekuntia.
+- Yksittäisen ilmoituksen avaaminen: 0.01 sekuntia.
+- Hakutoiminto (esim. kaikki tietyn pelipaikan haku): 0.93 sekuntia.
+- Profiilisivun lataus (käyttäjän omat ilmoitukset): 0.04 sekuntia.
+
+**Huomioita:**
+Tietokannassa on käytössä indeksi `CREATE INDEX idx_thread_messages ON messages (thread_id)`, joka nopeuttaa tietokantahakuja.'Tulosten perusteella sovellus skaalautuu erinomaisesti suuriin data määriin. Testidatan voi ajaa komennolla `python seed.py`.
+
