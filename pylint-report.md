@@ -104,7 +104,7 @@ Raportissa on yksi ilmoitus turhista sulkeista:
 app.py:179:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
 ```
 
-Tämä koskee ehtolausetta if not (1 <= p_count <= 4) or not (1 <= duration_h <= 10):. Vaikka Python ei  vaadi sulkeita not-sanan jälkeen, ne on jätetty koodiin tietoisesti. Sulkeiden kanssa ehtolause on  selkeämpi ja luettavampi kehittäjän mielestä.
+Tämä koskee yhtä ehtolausetta `if not (1 <= p_count <= 4) or not (1 <= duration_h <= 10):`. Vaikka Python ei  vaadi sulkeita not-sanan jälkeen, ne on jätetty koodiin tietoisesti. Sulkeiden kanssa ehtolause on  selkeämpi ja luettavampi kehittäjän mielestä.
 
 ## Puuttuvat palautusarvot (Inconsistent return statements)
 Raportti ilmoittaa useasta kohdasta palautusarvoihin liittyen:
