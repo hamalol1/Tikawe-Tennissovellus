@@ -6,9 +6,9 @@ Pylint antaa seuraavan raportin sovelluksesta:
 ************* Module app
 app.py:179:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
 app.py:207:0: C0301: Line too long (133/100) (line-too-long)
-app.py:300:0: C0301: Line too long (134/100) (line-too-long)
-app.py:388:0: C0301: Line too long (180/100) (line-too-long)
-app.py:420:0: C0301: Line too long (149/100) (line-too-long)
+app.py:325:0: C0301: Line too long (134/100) (line-too-long)
+app.py:413:0: C0301: Line too long (180/100) (line-too-long)
+app.py:445:0: C0301: Line too long (149/100) (line-too-long)
 app.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 app.py:19:0: C0116: Missing function or method docstring (missing-function-docstring)
 app.py:25:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -31,18 +31,18 @@ app.py:229:0: C0116: Missing function or method docstring (missing-function-docs
 app.py:229:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
 app.py:251:0: C0116: Missing function or method docstring (missing-function-docstring)
 app.py:263:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:284:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:303:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:303:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:327:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:337:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:355:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:364:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:364:0: R0914: Too many local variables (20/15) (too-many-locals)
-app.py:420:11: R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
-app.py:364:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:435:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:440:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:309:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:328:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:328:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:352:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:362:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:380:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:389:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:389:0: R0914: Too many local variables (20/15) (too-many-locals)
+app.py:445:11: R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
+app.py:389:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:460:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:465:0: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module config
 config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module db
@@ -71,9 +71,18 @@ forum.py:55:0: R0917: Too many positional arguments (6/5) (too-many-positional-a
 forum.py:62:0: C0116: Missing function or method docstring (missing-function-docstring)
 forum.py:66:0: C0116: Missing function or method docstring (missing-function-docstring)
 forum.py:70:0: C0116: Missing function or method docstring (missing-function-docstring)
-forum.py:91:0: C0116: Missing function or method docstring (missing-function-docstring)
-forum.py:97:0: C0116: Missing function or method docstring (missing-function-docstring)
-forum.py:101:0: C0116: Missing function or method docstring (missing-function-docstring)
+forum.py:89:0: C0116: Missing function or method docstring (missing-function-docstring)
+forum.py:115:0: C0116: Missing function or method docstring (missing-function-docstring)
+forum.py:121:0: C0116: Missing function or method docstring (missing-function-docstring)
+forum.py:125:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module seed
+seed.py:38:0: C0301: Line too long (120/100) (line-too-long)
+seed.py:43:0: C0301: Line too long (103/100) (line-too-long)
+seed.py:45:0: C0301: Line too long (164/100) (line-too-long)
+seed.py:46:0: C0301: Line too long (123/100) (line-too-long)
+seed.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+seed.py:6:0: C0116: Missing function or method docstring (missing-function-docstring)
+seed.py:6:0: R0914: Too many local variables (18/15) (too-many-locals)
 ************* Module users
 users.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 users.py:3:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -83,7 +92,7 @@ users.py:28:0: C0116: Missing function or method docstring (missing-function-doc
 users.py:32:0: C0116: Missing function or method docstring (missing-function-docstring)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.30/10 (previous run: 8.28/10, +0.02)
+Your code has been rated at 8.38/10 (previous run: 8.35/10, +0.03)
 ```
 Käydään seuraavaksi läpi tarkemmin raportin sisältö ja perustellaan, miksi kyseisiä asioita ei ole korjattu sovelluksessa.
 
@@ -141,3 +150,7 @@ app.py:420:11: R0916: Too many boolean expressions in if statement (6/5)
 ```
 
 Pylint varoittaa if-lauseesta, jossa tarkistetaan lomakkeen kenttien arvoja kerralla (location, skill_level, p_count, duration_h). Koodin luettavuuden kannalta on selkeämpää ja tehokkaampaa tarkistaa kaikki lomakkeen kenttien sallitut arvot samassa lausekkeessa ja palauttaa tarvittaessa abort(403), kuin tehdä tarkistus useassa erillisessä osassa.
+
+## Testidatan seed.py-skriptin ilmoitukset
+
+Pylint antaa useita ilmoituksia (esim. pitkät rivit C0301, puuttuvat docstringit C0114/C0116 ja liian monta muuttujaa R0914) `seed.py`-tiedostosta. Koska kyseessä on erillinen aputyökalu, joka on tarkoitettu vain suorituskyvyn testaukseen käytettävän datan luontiin, niin sen tyylivirheistä voidaan olla välittämättä.

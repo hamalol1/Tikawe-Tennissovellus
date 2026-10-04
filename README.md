@@ -40,9 +40,12 @@ Sovellusta testattiin suurella datan määrällä. `seed.py` avulla luotiin tiet
 **Mittauskohteet ja vasteajat:**
 - Etusivun lataus (avoimet pelivuorot ja sivutus): 0.02 sekuntia.
 - Yksittäisen ilmoituksen avaaminen: 0.01 sekuntia.
-- Hakutoiminto (esim. kaikki tietyn pelipaikan haku ja sivutus): 0.93 sekuntia.
+- Hakutoiminto (esim. kaikki tietyn pelipaikan haku ja sivutus): 0.04 sekuntia.
 - Profiilisivun lataus (käyttäjän omat ilmoitukset ja sivutus): 0.04 sekuntia.
 
 **Huomioita:**
-Tietokannassa on käytössä indeksi `CREATE INDEX idx_thread_messages ON messages (thread_id)`, joka nopeuttaa tietokantahakuja. Tulosten perusteella sovellus skaalautuu erinomaisesti suuriin data määriin. Testidatan voi ajaa komennolla `python seed.py`.
+Tietokannassa on käytössä indeksi `CREATE INDEX idx_thread_messages ON messages (thread_id)`, joka nopeuttaa tietokantahakuja. Tulosten perusteella sovellus skaalautuu erinomaisesti suuriin data määriin.
+
+Testidatan voi ajaa komennolla `python seed.py`.
+Ajan mittauksen saa päälle poistamalla kommentit `app.py`-tiedoston alusta olevista funktioista `before_request()` ja `after_request()`.
 

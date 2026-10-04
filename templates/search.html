@@ -30,6 +30,12 @@
   <h2>Hakutulokset</h2>
 
   {% if results %}
+  <p>
+    <a href="/search?play_time={{ play_time }}&location={{ location }}&player_count={{ player_count }}&page={{ page - 1 }}">&lt;&lt;</a>
+    Sivu {{ page }}/{{ page_count }}
+    <a href="/search?play_time={{ play_time }}&location={{ location }}&player_count={{ player_count }}&page={{ page + 1 }}">&gt;&gt;</a>
+  </p>
+
   <div style="display: flex; flex-direction: column; gap: 1em;">
     {% for result in results %}
     <div style="border: 1px solid #ddd; padding: 1em; border-radius: 4px; background-color: #fafafa;">

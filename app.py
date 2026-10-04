@@ -21,15 +21,15 @@ def show_lines(content):
     content = content.replace("\n", "<br />")
     return markupsafe.Markup(content)
 
-@app.before_request
-def before_request():
-    g.start_time = time.time()
+# @app.before_request
+# def before_request():
+#     g.start_time = time.time()
 
-@app.after_request
-def after_request(response):
-    elapsed_time = round(time.time() - g.start_time, 2)
-    print("elapsed time:", elapsed_time, "s")
-    return response
+# @app.after_request
+# def after_request(response):
+#     elapsed_time = round(time.time() - g.start_time, 2)
+#     print("elapsed time:", elapsed_time, "s")
+#     return response
 
 def require_login():
     if "user_id" not in session:
@@ -269,15 +269,40 @@ def search():
     location = request.args.get("location", "")
     player_count = request.args.get("player_count", "")
 
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        page = 1
+
     if "play_time" in request.args:
-        results = forum.search_threads(play_time, location, player_count)
+        page_size = 10
+        total_results = forum.search_thread_count(play_time, location, player_count)
+        page_count = math.ceil(total_results / page_size)
+        page_count = max(page_count, 1)
+
+        page = max(page, 1)
+        page = min(page, page_count)
+
+        results = forum.search_threads(
+            play_time, location, player_count, page, page_size
+        )
         searched = True
     else:
         results = []
         searched = False
+        page = 1
+        page_count = 1
 
-    return render_template("search.html", results=results, searched=searched,
-                           play_time=play_time, location=location, player_count=player_count)
+    return render_template(
+        "search.html",
+        results=results,
+        searched=searched,
+        play_time=play_time,
+        location=location,
+        player_count=player_count,
+        page=page,
+        page_count=page_count
+    )
 
 @app.route("/user/<int:user_id>")
 @app.route("/user/<int:user_id>/<int:page>")

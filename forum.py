@@ -67,7 +67,26 @@ def remove_thread(thread_id):
     sql = "UPDATE threads SET visible = 0 WHERE id = ?"
     db.execute(sql, [thread_id])
 
-def search_threads(play_time, location, player_count):
+def search_thread_count(play_time, location, player_count):
+    sql = """SELECT COUNT(*)
+             FROM threads t, users u
+             WHERE t.user_id = u.id AND t.visible = 1"""
+    params = []
+
+    if play_time:
+        sql += " AND t.play_time LIKE ?"
+        params.append("%" + play_time + "%")
+    if location:
+        sql += " AND t.location = ?"
+        params.append(location)
+    if player_count:
+        sql += " AND t.player_count = ?"
+        params.append(player_count)
+
+    result = db.query(sql, params)
+    return result[0][0] if result else 0
+
+def search_threads(play_time, location, player_count, page, page_size):
     sql = """SELECT t.id as thread_id,
                     t.location || ' (' || t.play_time || ')' as thread_title,
                     u.username, t.skill_level, t.player_count, t.duration
@@ -85,7 +104,12 @@ def search_threads(play_time, location, player_count):
         sql += " AND t.player_count = ?"
         params.append(player_count)
 
-    sql += " ORDER BY t.id DESC"
+    sql += " ORDER BY t.id DESC LIMIT ? OFFSET ?"
+
+    limit = page_size
+    offset = page_size * (page - 1)
+    params.extend([limit, offset])
+
     return db.query(sql, params)
 
 def get_participants(thread_id):
