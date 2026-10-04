@@ -84,48 +84,60 @@ users.py:32:0: C0116: Missing function or method docstring (missing-function-doc
 
 ------------------------------------------------------------------
 Your code has been rated at 8.30/10 (previous run: 8.28/10, +0.02)
-
+```
 Käydään seuraavaksi läpi tarkemmin raportin sisältö ja perustellaan, miksi kyseisiä asioita ei ole korjattu sovelluksessa.
 
 ## Docstring-ilmoitukset
 
 Suuri osa raportin ilmoituksista on seuraavan tyyppisiä ilmoituksia:
+```
 app.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 app.py:19:0: C0116: Missing function or method docstring (missing-function-docstring)
+```
 
 Ilmoitukset tarkoittavat, että moduuleissa ja funktioissa ei ole docstring-kommentteja. Nämä kommentit on jätetty tietoisesti pois, jotta koodi pysyy helposti luettavana.
 
 ## Turhat sulkeet (Unnecessary parens)
 
 Raportissa on yksi ilmoitus turhista sulkeista:
+```
 app.py:179:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
+```
 
 Tämä koskee ehtolausetta if not (1 <= p_count <= 4) or not (1 <= duration_h <= 10):. Vaikka Python ei  vaadi sulkeita not-sanan jälkeen, ne on jätetty koodiin tietoisesti. Sulkeiden kanssa ehtolause on  selkeämpi ja luettavampi kehittäjän mielestä.
 
 ## Puuttuvat palautusarvot (Inconsistent return statements)
 Raportti ilmoittaa useasta kohdasta palautusarvoihin liittyen:
+```
 app.py:63:0: R1710: Either all return statements in a function should return an expression, or none of them should.
 app.py:63:0: R0911: Too many return statements (8/6)
+```
 
 Nämä ilmoitukset johtuvat siitä, että koodissa on käytetty Flaskin sisäänrakennettua abort()-funktiota virheiden käsittelyyn. Pylint ei tunnista, että abort() pysäyttää funktion suorituksen kokonaan, ja tulkitsee sen vuoksi palautusarvojen logiikan virheellisesti. Koodi on toimiva ja noudattaa normaaleja Flask käytäntöjä.
 
 ## Paikallisten muuttujien ja parametrien määrä (Too many arguments/locals)
 Raportissa on huomautuksia funktioista, joille välitetään suuri määrä muuttujia:
+```
 forum.py:19:0: R0913: Too many arguments (7/5) (too-many-arguments)
 app.py:364:0: R0914: Too many local variables (20/15) (too-many-locals)
+```
 
 Sovelluksessa käsitellään uuden tennisvuoron ilmoittamista ja muokkaamista varten pitkää HTML-lomaketta (peliaika, paikka, taso, kesto, pelaajien määrä, lisätiedot etc.). Koska nämä tiedot kuuluvat yhteen kokonaisuuteen (yksi pelivuoro), on ne luonnollista pitää yhtenä rakenteena samoissa funktioissa, vaikka muuttujien määrä ylittääkin Pylintin oletusrajan.
 
 ## Liian pitkät koodirivit (Line too long)
 
 Muutamalla rivillä ylitetään Pylintin asettama 100 merkin oletusraja:
+```
 app.py:388:0: C0301: Line too long (180/100) (line-too-long)
 forum.py:9:0: C0301: Line too long (132/100) (line-too-long)
+```
 
 Nämä ylitykset johtuvat pitkistä SQL-kyselyistä forum.py-tiedostossa sekä pitkistä funktioiden kutsuista reititysten sisällä. Niiden jakaminen useammalle riville luettavuutta, joten ovat jätetty nykyiseen muotoonsa.
 
 ## Liian monta ehtolauseketta (Too many boolean expressions)
 
+```
 app.py:420:11: R0916: Too many boolean expressions in if statement (6/5)
+```
 
 Pylint varoittaa if-lauseesta, jossa tarkistetaan lomakkeen kenttien arvoja kerralla (location, skill_level, p_count, duration_h). Koodin luettavuuden kannalta on selkeämpää ja tehokkaampaa tarkistaa kaikki lomakkeen kenttien sallitut arvot samassa lausekkeessa ja palauttaa tarvittaessa abort(403), kuin tehdä tarkistus useassa erillisessä osassa.
