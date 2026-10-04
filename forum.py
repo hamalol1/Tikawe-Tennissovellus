@@ -17,7 +17,7 @@ def get_threads(page, page_size):
     return db.query(sql, [limit, offset])
 
 def add_thread(play_time, location, skill_level, player_count, duration, content, user_id):
-    sql = """INSERT INTO threads (play_time, location, skill_level, player_count, duration, user_id) 
+    sql = """INSERT INTO threads (play_time, location, skill_level, player_count, duration, user_id)
              VALUES (?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [play_time, location, skill_level, player_count, duration, user_id])
     thread_id = db.last_insert_id()
@@ -31,7 +31,7 @@ def add_message(content, user_id, thread_id):
 
 def get_thread(thread_id):
     sql = """SELECT t.id, t.play_time, t.location, t.skill_level, t.player_count, t.duration, t.user_id, u.username as creator
-             FROM threads t, users u 
+             FROM threads t, users u
              WHERE t.user_id = u.id AND t.id = ? AND t.visible = 1"""
     result = db.query(sql, [thread_id])
     return result[0] if result else None
@@ -53,8 +53,8 @@ def update_message(message_id, content):
     db.execute(sql, [content, message_id])
 
 def update_thread(thread_id, play_time, location, skill_level, player_count, duration):
-    sql = """UPDATE threads 
-             SET play_time = ?, location = ?, skill_level = ?, player_count = ?, duration = ? 
+    sql = """UPDATE threads
+             SET play_time = ?, location = ?, skill_level = ?, player_count = ?, duration = ?
              WHERE id = ?"""
     db.execute(sql, [play_time, location, skill_level, player_count, duration, thread_id])
 
@@ -68,13 +68,13 @@ def remove_thread(thread_id):
     db.execute(sql, [thread_id])
 
 def search_threads(play_time, location, player_count):
-    sql = """SELECT t.id as thread_id, 
+    sql = """SELECT t.id as thread_id,
                     t.location || ' (' || t.play_time || ')' as thread_title,
                     u.username, t.skill_level, t.player_count, t.duration
              FROM threads t, users u
              WHERE t.user_id = u.id AND t.visible = 1"""
     params = []
-    
+
     if play_time:
         sql += " AND t.play_time LIKE ?"
         params.append("%" + play_time + "%")
@@ -84,13 +84,13 @@ def search_threads(play_time, location, player_count):
     if player_count:
         sql += " AND t.player_count = ?"
         params.append(player_count)
-        
+
     sql += " ORDER BY t.id DESC"
     return db.query(sql, params)
 
 def get_participants(thread_id):
-    sql = """SELECT u.id, u.username 
-             FROM users u, participants p 
+    sql = """SELECT u.id, u.username
+             FROM users u, participants p
              WHERE u.id = p.user_id AND p.thread_id = ?"""
     return db.query(sql, [thread_id])
 

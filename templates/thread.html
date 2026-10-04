@@ -4,14 +4,14 @@
 
 {% block content %}
   <h2>{{ thread.location }} ({{ thread.play_time }})</h2>
-  
+
   <div style="background-color: #e8f5e9; padding: 1.5em; border-radius: 4px; border: 1px solid #a5d6a7; margin-bottom: 2em;">
     <p style="margin: 0 0 0.5em 0;"><strong>Ilmoittaja:</strong> <a href="/user/{{ thread.user_id }}" style="color: #1b5e20;">{{ thread.creator }}</a></p>
     <p style="margin: 0 0 0.5em 0;"><strong>Pelitaso:</strong> {{ thread.skill_level }}</p>
     <p style="margin: 0 0 0.5em 0;"><strong>Kesto:</strong> {{ thread.duration }} h</p>
     <p style="margin: 0 0 0.5em 0;"><strong>Vapaita paikkoja:</strong> {{ thread.player_count - participants|length }} / {{ thread.player_count }}</p>
     <p style="margin: 0 0 1em 0;">
-      <strong>Mukaan ilmoittautuneet:</strong> 
+      <strong>Mukaan ilmoittautuneet:</strong>
       {% if participants %}
         {% for p in participants %}<a href="/user/{{ p.id }}">{{ p.username }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
       {% else %}
@@ -25,7 +25,7 @@
       <strong style="display: block; margin-bottom: 0.5em;">Lisätiedot:</strong>
       {{ messages[0].content | show_lines }}
     </div>
-    
+
     {% if session.user_id == thread.user_id %}
     <p style="font-size: 0.9em; margin: 0 0 1em 0;">
       <a href="/edit_thread/{{ thread.id }}" style="color: #2e7d32; font-weight: bold;">Muokkaa ilmoitusta</a> |
@@ -36,7 +36,7 @@
     </p>
     {% endif %}
     {% endif %}
-    
+
     {% if is_participant %}
       <form action="/leave" method="post" style="display:inline;">
         <input type="hidden" name="thread_id" value="{{ thread.id }}">
