@@ -38,7 +38,7 @@ Sovellusta testattiin suurella datan määrällä. `seed.py` avulla luotiin tiet
 - 100 000 viestiä (ilmoituksen lisätiedot)
 
 **Mittauskohteet ja vasteajat:**
-- Etusivun lataus (Avoimet pelivuorot ja sivutus): 0.02 sekuntia.
+- Etusivun lataus (avoimet pelivuorot ja sivutus): 0.02 sekuntia.
 - Yksittäisen ilmoituksen avaaminen: 0.01 sekuntia.
 - Hakutoiminto (esim. kaikki tietyn pelipaikan haku): 0.93 sekuntia.
 - Profiilisivun lataus (käyttäjän omat ilmoitukset): 0.04 sekuntia.
