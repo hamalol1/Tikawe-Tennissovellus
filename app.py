@@ -85,6 +85,10 @@ def register():
             flash("VIRHE: Salasanan pitää olla vähintään 4 merkkiä pitkä")
             return render_template("register.html", filled={"username": username})
 
+        if len(password1) > 20:
+            flash("VIRHE: Salasanan pituus saa olla enintään 20 merkkiä")
+            return render_template("register.html", filled={"username": username})
+
         if password1 != password2:
             flash("VIRHE: Antamasi salasanat eivät ole samat")
             return render_template("register.html", filled={"username": username})
