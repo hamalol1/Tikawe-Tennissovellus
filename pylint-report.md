@@ -4,45 +4,45 @@ Pylint antaa seuraavan raportin sovelluksesta:
 
 ```text
 ************* Module app
-app.py:179:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
-app.py:207:0: C0301: Line too long (133/100) (line-too-long)
-app.py:325:0: C0301: Line too long (134/100) (line-too-long)
-app.py:413:0: C0301: Line too long (180/100) (line-too-long)
-app.py:445:0: C0301: Line too long (149/100) (line-too-long)
+app.py:183:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
+app.py:211:0: C0301: Line too long (133/100) (line-too-long)
+app.py:329:0: C0301: Line too long (134/100) (line-too-long)
+app.py:417:0: C0301: Line too long (180/100) (line-too-long)
+app.py:449:0: C0301: Line too long (149/100) (line-too-long)
 app.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 app.py:19:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:25:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:29:0: C0116: Missing function or method docstring (missing-function-docstring)
 app.py:34:0: C0116: Missing function or method docstring (missing-function-docstring)
 app.py:38:0: C0116: Missing function or method docstring (missing-function-docstring)
 app.py:44:0: C0116: Missing function or method docstring (missing-function-docstring)
 app.py:63:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:63:0: R0911: Too many return statements (8/6) (too-many-return-statements)
+app.py:63:0: R0911: Too many return statements (9/6) (too-many-return-statements)
 app.py:63:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:104:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:104:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:128:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:137:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:137:0: R0914: Too many local variables (16/15) (too-many-locals)
-app.py:137:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:193:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:210:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:229:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:229:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:251:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:263:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:309:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:328:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:328:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:352:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:362:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:380:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:389:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:389:0: R0914: Too many local variables (20/15) (too-many-locals)
-app.py:445:11: R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
-app.py:389:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
-app.py:460:0: C0116: Missing function or method docstring (missing-function-docstring)
-app.py:465:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:108:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:108:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:132:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:141:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:141:0: R0914: Too many local variables (16/15) (too-many-locals)
+app.py:141:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:197:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:214:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:233:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:233:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:255:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:267:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:313:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:332:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:332:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:356:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:366:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:384:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:393:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:393:0: R0914: Too many local variables (20/15) (too-many-locals)
+app.py:449:11: R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
+app.py:393:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+app.py:464:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:469:0: C0116: Missing function or method docstring (missing-function-docstring)
+app.py:2:0: W0611: Unused import time (unused-import)
+app.py:7:0: W0611: Unused g imported from flask (unused-import)
 ************* Module config
 config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module db
@@ -92,13 +92,20 @@ users.py:28:0: C0116: Missing function or method docstring (missing-function-doc
 users.py:32:0: C0116: Missing function or method docstring (missing-function-docstring)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.38/10 (previous run: 8.35/10, +0.03)
+Your code has been rated at 8.37/10 (previous run: 8.37/10, +0.00)
 ```
 Käydään seuraavaksi läpi tarkemmin raportin sisältö ja perustellaan, miksi kyseisiä asioita ei ole korjattu sovelluksessa.
 
-## Docstring-ilmoitukset
+## Liian pitkät koodirivit (Line too long)
+Muutamalla rivillä ylitetään Pylintin asettama 100 merkin oletusraja:
+```
+app.py:388:0: C0301: Line too long (180/100) (line-too-long)
+forum.py:9:0: C0301: Line too long (132/100) (line-too-long)
+```
 
-Suuri osa raportin ilmoituksista on seuraavan tyyppisiä ilmoituksia:
+Nämä ylitykset johtuvat pitkistä SQL-kyselyistä forum.py-tiedostossa sekä pitkistä funktioiden kutsuista reititysten sisällä. Luettavuuden takia pidetään yhdellä rivillä.
+
+## Docstring-ilmoitukset
 ```
 app.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 app.py:19:0: C0116: Missing function or method docstring (missing-function-docstring)
@@ -107,10 +114,9 @@ app.py:19:0: C0116: Missing function or method docstring (missing-function-docst
 Ilmoitukset tarkoittavat, että moduuleissa ja funktioissa ei ole docstring-kommentteja. Nämä kommentit on jätetty tietoisesti pois, jotta koodi pysyy helposti luettavana.
 
 ## Turhat sulkeet (Unnecessary parens)
-
 Raportissa on yksi ilmoitus turhista sulkeista:
 ```
-app.py:179:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
+app.py:183:0: C0325: Unnecessary parens after 'not' keyword (superfluous-parens)
 ```
 
 Tämä koskee yhtä ehtolausetta `if not (1 <= p_count <= 4) or not (1 <= duration_h <= 10):`. Vaikka Python ei  vaadi sulkeita not-sanan jälkeen, ne on jätetty koodiin tietoisesti. Sulkeiden kanssa ehtolause on  selkeämpi ja luettavampi kehittäjän mielestä.
@@ -128,23 +134,12 @@ Nämä ilmoitukset johtuvat siitä, että koodissa on käytetty Flaskin sisään
 Raportissa on huomautuksia funktioista, joille välitetään suuri määrä muuttujia:
 ```
 forum.py:19:0: R0913: Too many arguments (7/5) (too-many-arguments)
-app.py:364:0: R0914: Too many local variables (20/15) (too-many-locals)
+app.py:393:0: R0914: Too many local variables (20/15) (too-many-locals)
 ```
 
-Sovelluksessa käsitellään uuden tennisvuoron ilmoittamista ja muokkaamista varten pitkää HTML-lomaketta (peliaika, paikka, taso, kesto, pelaajien määrä, lisätiedot etc.). Koska nämä tiedot kuuluvat yhteen kokonaisuuteen (yksi pelivuoro), on ne luonnollista pitää yhtenä rakenteena samoissa funktioissa, vaikka muuttujien määrä ylittääkin Pylintin oletusrajan.
-
-## Liian pitkät koodirivit (Line too long)
-
-Muutamalla rivillä ylitetään Pylintin asettama 100 merkin oletusraja:
-```
-app.py:388:0: C0301: Line too long (180/100) (line-too-long)
-forum.py:9:0: C0301: Line too long (132/100) (line-too-long)
-```
-
-Nämä ylitykset johtuvat pitkistä SQL-kyselyistä forum.py-tiedostossa sekä pitkistä funktioiden kutsuista reititysten sisällä. Niiden jakaminen useammalle riville luettavuutta, joten ovat jätetty nykyiseen muotoonsa.
+Sovelluksessa käsitellään uuden tennisvuoron ilmoittamista ja muokkaamista varten pitkää HTML-lomaketta (peliaika, paikka, taso, kesto, pelaajien määrä, lisätiedot etc.). Nämä tiedot kuuluvat yhteen kokonaisuuteen (yksi pelivuoro), niin on ne luonnollista pitää yhtenä rakenteena samoissa funktioissa, vaikka muuttujien määrä ylittääkin Pylintin oletusrajan.
 
 ## Liian monta ehtolauseketta (Too many boolean expressions)
-
 ```
 app.py:420:11: R0916: Too many boolean expressions in if statement (6/5)
 ```
@@ -152,5 +147,11 @@ app.py:420:11: R0916: Too many boolean expressions in if statement (6/5)
 Pylint varoittaa if-lauseesta, jossa tarkistetaan lomakkeen kenttien arvoja kerralla (location, skill_level, p_count, duration_h). Koodin luettavuuden kannalta on selkeämpää ja tehokkaampaa tarkistaa kaikki lomakkeen kenttien sallitut arvot samassa lausekkeessa ja palauttaa tarvittaessa abort(403), kuin tehdä tarkistus useassa erillisessä osassa.
 
 ## Testidatan seed.py-skriptin ilmoitukset
-
 Pylint antaa useita ilmoituksia (esim. pitkät rivit C0301, puuttuvat docstringit C0114/C0116 ja liian monta muuttujaa R0914) `seed.py`-tiedostosta. Koska kyseessä on erillinen aputyökalu, joka on tarkoitettu vain suorituskyvyn testaukseen käytettävän datan luontiin, niin sen tyylivirheistä voidaan olla välittämättä.
+
+## Käyttämättömät tuonnit (Unused imports)
+```
+app.py:2:0: W0611: Unused import time (unused-import)
+app.py:7:0: W0611: Unused g imported from flask (unused-import)
+```
+Moduulit jätetty sovellukseen mahdollisen ajanmittauksen takia, before_request() ja after_request(). Tällä hetkellä funktiot kommentoitu pois, mutta voidaan helposti palauttaa jos halutaan tutkia sovelluksen nopeutta.
