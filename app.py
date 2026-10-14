@@ -130,11 +130,9 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    del session["user_id"]
-
-    if "csrf_token" in session:
-        del session["csrf_token"]
+    session.pop("username", None)
+    session.pop("user_id", None)
+    session.pop("csrf_token", None)
     return redirect("/")
 
 @app.route("/new_thread", methods=["GET", "POST"])
@@ -368,6 +366,9 @@ def join():
     check_csrf()
     thread_id = int(request.form["thread_id"])
     thread = forum.get_thread(thread_id)
+    if not thread:
+        abort(404)
+
     participants = forum.get_participants(thread_id)
 
     if len(participants) < thread["player_count"]:

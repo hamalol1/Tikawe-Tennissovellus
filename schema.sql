@@ -32,9 +32,4 @@ CREATE TABLE participants (
     UNIQUE(user_id, thread_id)
 );
 
-CREATE TABLE visits (
-    id INTEGER PRIMARY KEY,
-    visited_at TEXT
-);
-
 CREATE INDEX idx_thread_messages ON messages (thread_id);
