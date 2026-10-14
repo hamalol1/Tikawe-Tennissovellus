@@ -28,8 +28,16 @@
   </div>
 
   <div class="content">
-    {% for message in get_flashed_messages() %}
-    <p class="info">{{ message }}</p>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      {% if category == 'error' %}
+        <p class="info" style="color: #c62828; background-color: #ffebee; padding: 1em; margin-bottom: 1em; border-radius: 4px; border: 1px solid #ffcdd2;">
+          {{ message }}
+        </p>
+      {% else %}
+        <p class="info" style="color: #2e7d32; background-color: #e8f5e9; padding: 1em; margin-bottom: 1em; border-radius: 4px; border: 1px solid #c8e6c9;">
+          {{ message }}
+        </p>
+      {% endif %}
     {% endfor %}
 
     {% block content %}{% endblock %}

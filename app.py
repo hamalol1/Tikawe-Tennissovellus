@@ -43,7 +43,7 @@ def check_csrf():
 @app.route("/<int:page>")
 def index(page=1):
     if "user_id" not in session:
-        flash("Kirjaudu sisään nähdäksesi avoimet pelivuorot.")
+        flash("Kirjaudu sisään nähdäksesi avoimet pelivuorot.", "error")
         return redirect("/login")
 
     page_size = 10
@@ -70,27 +70,27 @@ def register():
         password2 = request.form["password2"]
 
         if not username or " " in username:
-            flash("VIRHE: Käyttäjänimi ei saa olla tyhjä tai sisältää välilyöntejä")
+            flash("VIRHE: Käyttäjänimi ei saa olla tyhjä tai sisältää välilyöntejä", "error")
             return render_template("register.html", filled={"username": username})
 
         if len(username) > 16:
-            flash("VIRHE: Käyttäjänimi saa olla enintään 16 merkkiä pitkä")
+            flash("VIRHE: Käyttäjänimi saa olla enintään 16 merkkiä pitkä", "error")
             return render_template("register.html", filled={"username": username})
 
         if " " in password1:
-            flash("VIRHE: Salasana ei saa sisältää välilyöntejä")
+            flash("VIRHE: Salasana ei saa sisältää välilyöntejä", "error")
             return render_template("register.html", filled={"username": username})
 
         if len(password1) < 4:
-            flash("VIRHE: Salasanan pitää olla vähintään 4 merkkiä pitkä")
+            flash("VIRHE: Salasanan pitää olla vähintään 4 merkkiä pitkä", "error")
             return render_template("register.html", filled={"username": username})
 
         if len(password1) > 20:
-            flash("VIRHE: Salasanan pituus saa olla enintään 20 merkkiä")
+            flash("VIRHE: Salasanan pituus saa olla enintään 20 merkkiä", "error")
             return render_template("register.html", filled={"username": username})
 
         if password1 != password2:
-            flash("VIRHE: Antamasi salasanat eivät ole samat")
+            flash("VIRHE: Antamasi salasanat eivät ole samat", "error")
             return render_template("register.html", filled={"username": username})
 
         password_hash = generate_password_hash(password1)
@@ -101,7 +101,7 @@ def register():
             flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
             return redirect("/")
         except sqlite3.IntegrityError:
-            flash("VIRHE: Valitsemasi tunnus on jo varattu")
+            flash("VIRHE: Valitsemasi tunnus on jo varattu", "error")
             return render_template("register.html", filled={"username": username})
 
 @app.route("/login", methods=["GET", "POST"])
@@ -125,7 +125,7 @@ def login():
             flash("Kirjautuminen onnistui!")
             return redirect("/user/" + str(user_id))
 
-        flash("VIRHE: Väärä tunnus tai salasana")
+        flash("VIRHE: Väärä tunnus tai salasana", "error")
         return render_template("login.html", filled_username=username)
 
 @app.route("/logout")
@@ -160,7 +160,7 @@ def new_thread():
         try:
             dt = datetime.strptime(play_time_raw, "%Y-%m-%dT%H:%M")
             if dt < datetime.now():
-                flash("Peliajan on oltava tulevaisuudessa.")
+                flash("Peliajan on oltava tulevaisuudessa.", "error")
                 return redirect("/new_thread")
 
             dt = dt.replace(minute=0)
@@ -196,7 +196,7 @@ def new_thread():
 @app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):
     if "user_id" not in session:
-        flash("Kirjaudu sisään nähdäksesi ilmoituksen tarkemmat tiedot.")
+        flash("Kirjaudu sisään nähdäksesi ilmoituksen tarkemmat tiedot.", "error")
         return redirect("/login")
 
     thread = forum.get_thread(thread_id)
@@ -266,7 +266,7 @@ def remove_thread(thread_id):
 @app.route("/search")
 def search():
     if "user_id" not in session:
-        flash("Kirjaudu sisään etsiäksesi pelivuoroja.")
+        flash("Kirjaudu sisään etsiäksesi pelivuoroja.", "error")
         return redirect("/login")
 
     play_time = request.args.get("play_time", "")
@@ -339,12 +339,12 @@ def add_image():
         check_csrf()
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
-            flash("VIRHE: Lähettämäsi tiedosto ei ole jpg-tiedosto")
+            flash("VIRHE: Lähettämäsi tiedosto ei ole jpg-tiedosto", "error")
             return redirect("/add_image")
 
         image = file.read()
         if len(image) > 100 * 1024:
-            flash("VIRHE: Lähettämäsi tiedosto on liian suuri")
+            flash("VIRHE: Lähettämäsi tiedosto on liian suuri", "error")
             return redirect("/add_image")
 
         user_id = session["user_id"]
@@ -375,9 +375,9 @@ def join():
             forum.add_participant(session["user_id"], thread_id)
             flash("Olet nyt mukana pelivuorolla!")
         except sqlite3.IntegrityError:
-            flash("Olet jo mukana.")
+            flash("Olet jo mukana.", "error")
     else:
-        flash("Vuoro on jo täynnä.")
+        flash("Vuoro on jo täynnä.", "error")
     return redirect("/thread/" + str(thread_id))
 
 @app.route("/leave", methods=["POST"])
@@ -429,7 +429,7 @@ def edit_thread(thread_id):
         try:
             dt = datetime.strptime(play_time_raw, "%Y-%m-%dT%H:%M")
             if dt < datetime.now():
-                flash("Peliajan on oltava tulevaisuudessa.")
+                flash("Peliajan on oltava tulevaisuudessa.", "error")
                 return redirect("/edit_thread/" + str(thread_id))
 
             dt = dt.replace(minute=0)
@@ -462,10 +462,10 @@ def edit_thread(thread_id):
 
 @app.errorhandler(403)
 def forbidden(_e):
-    flash("Pääsy evätty. Kirjaudu sisään käyttääksesi tätä toimintoa.")
+    flash("Pääsy evätty. Kirjaudu sisään käyttääksesi tätä toimintoa.", "error")
     return redirect("/login")
 
 @app.errorhandler(404)
 def not_found(_e):
-    flash("Etsimääsi sivua tai ilmoitusta ei löytynyt.")
+    flash("Etsimääsi sivua tai ilmoitusta ei löytynyt.", "error")
     return redirect("/")
