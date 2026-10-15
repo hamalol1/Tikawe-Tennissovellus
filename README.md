@@ -1,5 +1,5 @@
 # tikawe
-Tietokannat ja Web ohjelmointi kurssin repo.
+Tietokannat ja web-ohjelmointi kurssin repo.
 
 Tennisvuoron ilmoitus sovellus, josta löytyy seuraavat ominaisuudet:
 - Sovelluksessa käyttäjä pystyy etsimään peliseuraa tennikseen.
